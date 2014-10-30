@@ -26,7 +26,7 @@ get '/' => sub {
 
 any ['get', 'post'] => '/*' => sub {
   my ($path) = splat;
-  #my $text = param 'text';
+  #my $text = param 'text'; 
   my $text = "Eu sou o Nuno.";
   my $result = $routemap{$path}->($text);
   template 'index' => { res => $result };
