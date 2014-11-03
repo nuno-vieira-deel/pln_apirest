@@ -9,29 +9,19 @@ use Module::Load;
 use Import::Into;
 use Class::Factory::Util;
 
+our $VERSION = '0.1';
+
+my %routemap = ();
+
 my @modulelist = API_PLN::Service->subclasses;
 
 for my $module (@modulelist){
-  autoload "API_PLN::Service::".$module;
+  my $loadmodule = "API_PLN::Service::".$module;
+  load $loadmodule;
+  my $hash_token = $loadmodule->get_token();
+  $routemap{$hash_token}{param_function} = $loadmodule->param_function();
+  $routemap{$hash_token}{main_function} = $loadmodule->main_function();
 }
-
-
-our $VERSION = '0.1';
-
-my %routemap = (
-  'tokenizer' => {
-      param_function => sub {
-        my (%hparams) = @_;
-        #funcao_teste();
-        return 1;
-      },
-      main_function => sub {
-        my ($text) = @_;
-        my $result = to_json main_function($text);
-        return $result;
-      }
-    }
-);
 
 
 get '/' => sub {
