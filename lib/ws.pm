@@ -30,9 +30,12 @@ get '/' => sub {
 
 any ['get', 'post'] => '/*' => sub {
   my ($path) = splat; 
-  my $val = $routemap{$path}{param_function}->(params);
-  my $text = param 'text';
-  my $result = $routemap{$path}{main_function}->($text);
+  my $result = "Error";
+  my %input_params = params;
+  my $val = $routemap{$path}{param_function}->(\%input_params);
+  if ($val==1){
+    $result = $routemap{$path}{main_function}->(\%input_params);
+  }
   template 'index' => { res => $result };
 };
 
