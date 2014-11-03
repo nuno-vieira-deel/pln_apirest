@@ -3,9 +3,7 @@ package API_PLN::Service::TokenizerFL3;
 use 5.018002;
 use strict;
 use warnings;
-
 use JSON;
-
 use FL3 'pt';
 use Lingua::FreeLing3::Sentence;
 use Lingua::FreeLing3::Utils qw/word_analysis/;
@@ -13,26 +11,23 @@ use Lingua::FreeLing3::Utils qw/word_analysis/;
 require Exporter;
 
 our @ISA = qw(Exporter);
-
 our %EXPORT_TAGS = ( 'all' => [ qw(
 	
 ) ] );
-
 our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
-
 our @EXPORT = qw(
-	&main_function &param_function &get_token
-);
 
+);
 our $VERSION = '0.01';
 
+
 my $hash_token = 'tokenizer';
-my %parameters = { 
+my %parameters = ( 
     text => {
       description => 'The text to be tokenized',
-      required => 1
-    } 
- };
+      required => 1,
+    },
+ );
 
 sub get_token {
   return $hash_token;
@@ -40,17 +35,22 @@ sub get_token {
 
 sub param_function {
   return sub {
-    my (%input_params) = @_;
-    # funcao que ve input_params e parameters
-    return 1;
+    my ($input_params) = @_;
+    my $flag = 1;
+    for my $param (keys %parameters){
+      if ($parameters{$param}{required} == 1){
+        $flag = 0 if (!exists($input_params->{$param}));
+      }
+    }
+    return $flag;
   }
 }
 
 
 sub main_function {
   return sub {
-    my ($text) = @_;
-    my $tokens = _fl3_tokenizer($text);
+    my ($input_params) = @_;
+    my $tokens = _fl3_tokenizer($input_params->{text});
     return encode_json $tokens;
   }
 }
