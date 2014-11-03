@@ -34,7 +34,7 @@ sub get_token {
 }
 
 sub param_function {
-  return sub {
+#  return sub {
     my ($input_params) = @_;
     my $flag = 1;
     for my $param (keys %parameters){
@@ -43,16 +43,16 @@ sub param_function {
       }
     }
     return $flag;
-  }
+ # }
 }
 
 
 sub main_function {
-  return sub {
+  #return sub {
     my ($input_params) = @_;
     my $tokens = _fl3_tokenizer($input_params->{text});
     return encode_json $tokens;
-  }
+  #}
 }
 
 sub _fl3_tokenizer {
