@@ -1,0 +1,6 @@
+Changes
+Makefile.PL
+MANIFEST
+README
+t/API_PLN-Service-AnalyzerJspell.t
+lib/API_PLN/Service/AnalyzerJspell.pm
