@@ -46,7 +46,7 @@ sub get_token {
 }
 
 sub param_function {
-	return sub {
+	#return sub {
 	    my ($input_params) = @_;
 	    my $flag = 0;
 	    for my $param (keys %parameters){
@@ -55,18 +55,18 @@ sub param_function {
 	      }
 	    }
 	    return $flag;
-	}
+	#}
 }
 
 sub main_function {
-	return sub {
+	#return sub {
 		my ($input_params) = @_;
 		if(exists $input_params->{word}){
 			my %options = ( lang=>'pt' );
 			my $result = _jspell_analyzer_word($input_params->{word}, %options);
 			return encode_json $result;
 		}
-	}
+	#}
 }
 
 sub _jspell_analyzer_word {

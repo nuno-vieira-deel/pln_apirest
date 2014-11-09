@@ -19,8 +19,8 @@ for my $module (@modulelist){
   my $loadmodule = "API_PLN::Service::".$module;
   load $loadmodule;
   my $hash_token = $loadmodule->get_token();
-  $routemap{$hash_token}{param_function} = $loadmodule->param_function();
-  $routemap{$hash_token}{main_function} = $loadmodule->main_function();
+  $routemap{$hash_token}{param_function} = $loadmodule->can("param_function");
+  $routemap{$hash_token}{main_function}  = $loadmodule->can("main_function");
 }
 
 
