@@ -4,6 +4,7 @@ use 5.018002;
 use strict;
 use warnings;
 use JSON;
+use URI::Escape;
 use FL3 'pt';
 use Lingua::FreeLing3::Sentence;
 use Lingua::FreeLing3::Utils qw/word_analysis/;

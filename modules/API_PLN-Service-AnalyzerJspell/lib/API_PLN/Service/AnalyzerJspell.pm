@@ -4,6 +4,7 @@ use 5.018002;
 use strict;
 use warnings;
 use JSON;
+use URI::Escape;
 use Lingua::Jspell;
 
 require Exporter;
