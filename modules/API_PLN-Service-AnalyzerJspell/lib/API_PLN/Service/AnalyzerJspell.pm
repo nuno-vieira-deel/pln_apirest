@@ -26,8 +26,10 @@ our $VERSION = '0.01';
 
 my $jspell_dict = Lingua::Jspell->new("pt_PT");
 
-my $hash_token = 'jspell_analyzer';
-my %parameters = ( 
+
+my %index_info = (
+  hash_token => 'jspell_analyzer',
+  parameters => {
     text => {
       description => 'The text to be analyzed',
       required => 1,
@@ -40,18 +42,29 @@ my %parameters = (
       description => 'Named-entity recognition',
       required => 0,
     },
- );
+  },
+  subtitle => 'Subtitulo de jspell_analyzer',
+  description => 'Descricao de jspell_analyzer',
+  example => {
+    input => 'input',
+    output => '[{"word":"input","pos":"NCMS","lemma":"input","cat":"n"}]',
+  },
+);
 
 sub get_token {
-  return $hash_token;
+  return $index_info{hash_token};
+}
+
+sub get_info {
+  return \%index_info;
 }
 
 sub param_function {
 	#return sub {
 	    my ($input_params) = @_;
 	    my $flag = 0;
-	    for my $param (keys %parameters){
-	      if ($parameters{$param}{required} == 1){
+	    for my $param (keys %{$index_info{parameters}}){
+	      if ($index_info{parameters}{$param}{required} == 1){
 	        $flag++ if (exists($input_params->{$param}));
 	      }
 	    }

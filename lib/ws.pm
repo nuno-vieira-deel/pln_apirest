@@ -13,6 +13,7 @@ use Class::Factory::Util;
 our $VERSION = '0.1';
 
 my %routemap = ();
+my %indexmap = ();
 
 my @modulelist = API_PLN::Service->subclasses;
 
@@ -20,13 +21,16 @@ for my $module (@modulelist){
   my $loadmodule = "API_PLN::Service::".$module;
   load $loadmodule;
   my $hash_token = $loadmodule->get_token();
+  $indexmap{$hash_token} = $loadmodule->get_info();
   $routemap{$hash_token}{param_function} = $loadmodule->can("param_function");
   $routemap{$hash_token}{main_function}  = $loadmodule->can("main_function");
   Class::Unload->unload($loadmodule);
 }
 
 get '/' => sub {
-  template 'index';
+  template 'index' => {
+    tools => \%indexmap
+  };
 };
 
 get '/info' => sub {

@@ -31,8 +31,10 @@ my $fl3_morph_pt = Lingua::FreeLing3::MorphAnalyzer->new('pt',
     DatesDetection         => 0, NERecognition          => 0,
   );
 
-my $hash_token = 'fl3_analyzer';
-my %parameters = ( 
+
+my %index_info = (
+  hash_token => 'fl3_analyzer',
+  parameters => {
     text => {
       description => 'The text to be analyzed',
       required => 1,
@@ -45,18 +47,29 @@ my %parameters = (
       description => 'Named-entity recognition',
       required => 0,
     },
- );
+  },
+  subtitle => 'Subtitulo de fl3_analyzer',
+  description => 'Descricao de fl3_analyzer',
+  example => {
+    input => 'O input.',
+    output => '[{"lemma":"o","pos":"DA0MS0","word":"O"},{"lemma":"input","pos":"NCMS000","word":"input"},{"pos":"Fp","lemma":".","word":"."}]',
+  },
+);
 
 sub get_token {
-  return $hash_token;
+  return $index_info{hash_token};
+}
+
+sub get_info {
+  return \%index_info;
 }
 
 sub param_function {
 	#return sub {
 	    my ($input_params) = @_;
 	    my $flag = 0;
-	    for my $param (keys %parameters){
-	      if ($parameters{$param}{required} == 1){
+	    for my $param (keys %{$index_info{parameters}}){
+	      if ($index_info{parameters}{$param}{required} == 1){
 	        $flag++ if (exists($input_params->{$param}));
 	      }
 	    }
