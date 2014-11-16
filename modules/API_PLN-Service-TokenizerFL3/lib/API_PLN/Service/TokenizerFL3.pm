@@ -4,6 +4,7 @@ use 5.018002;
 use strict;
 use warnings;
 use JSON;
+use URI::Escape;
 use FL3 'pt';
 use Lingua::FreeLing3::Sentence;
 use Lingua::FreeLing3::Utils qw/word_analysis/;
@@ -21,24 +22,36 @@ our @EXPORT = qw(
 our $VERSION = '0.01';
 
 
-my $hash_token = 'tokenizer';
-my %parameters = ( 
+my %index_info = (
+  hash_token => 'tokenizer',
+  parameters => {
     text => {
       description => 'The text to be tokenized',
       required => 1,
     },
- );
+  },
+  subtitle => 'Subtitulo de tokenizer',
+  description => 'Descricao de tokenizer',
+  example => {
+    input => 'O input.',
+    output => '["O","input","."]',
+  },
+);
 
 sub get_token {
-  return $hash_token;
+  return $index_info{hash_token};
+}
+
+sub get_info {
+  return \%index_info;
 }
 
 sub param_function {
 #  return sub {
     my ($input_params) = @_;
     my $flag = 1;
-    for my $param (keys %parameters){
-      if ($parameters{$param}{required} == 1){
+    for my $param (keys %{$index_info{parameters}}){
+      if ($index_info{parameters}{$param}{required} == 1){
         $flag = 0 if (!exists($input_params->{$param}));
       }
     }

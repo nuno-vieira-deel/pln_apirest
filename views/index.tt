@@ -1,14 +1,83 @@
+<nav class="breadcrumbs">
+	<div class="container">
+		<ul>
+			<li><a href="#">Home</a></li>
+			<li><a href="#" class="active">Página X</a></li>
+		</ul>
+	</div>
+</nav>
+<main class="container">
+	<nav class="sidebar">
+		<ul>
+			<li class="active">
+				<a href="#">Available Tools</a>
+				<ul>
+					[% FOREACH elem IN tools.keys.sort %]
+						<li><a href="#[% elem %]">[% elem %]</a></li>
+					[% END %]
+				</ul>
+			</li>
+			<li><a href="#">Demo Section</a></li>
+			<li><a href="#">Contacts</a></li>
+		</ul>
+	</nav>
+	<section class="content-wrapper">
+		[% FOREACH elem IN tools.keys.sort %]
+		<a name="[% elem %]"></a>
+		<div class="content">
+			<h1 class="title">[% elem %]</h1>
+			<h4 class="subtitle">Um subtitulo qualquer</h2>
+			<p class="description">Descrição blah blah Lorem ipsum In aliqua eiusmod Ut adipisicing amet adipisicing laboris commodo labore esse exercitation proident anim consequat in eiusmod in sed velit ad nulla in ex. <a href="#">some url</a>
 
-<p>All request are made to <a href="http://api.natura.di.uminho.pt">http://api.natura.di.uminho.pt</a>, and all responses are in <em>JSON</em> format. Check the online <a href="/demo">demo</a>.</p>
+			para ver como preencher o resto do indice: https://developer.spotify.com/web-api/user-guide/</p>
+			<p class="subtitle">URI:</p>
+			<p class="code">http://someurl.com/params</p>
+			<p class="subtitle">Parameters:</p>
+			<table>
+				<thead>
+					<tr>
+						<th class="max">Name</th>
+						<th class="check-container">Required</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>Parametro 1</td>
+						<td class="check-container"><img src="/img/check_icon.png" class="check"></td>
+					</tr>
+					<tr>
+						<td>Parametro 2</td>
+						<td class="check-container"><img src="/img/check_icon.png" class="check"></td>
+					</tr>
+					<tr>
+						<td>Parametro 3</td>
+						<td class="check-container"></td>
+					</tr>
+					<tr>
+						<td>Parametro ...</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Parametro N</td>
+						<td class="check-container"><img src="/img/check_icon.png" class="check"></td>
+					</tr>
+				</tbody>
+			</table>
+			<p class="subtitle">Example:</p>
+			<p class="code">some code with <span class="variable">variables</span></p>
+			<p class="subtitle">Output:</p>
+			<p class="code">Lorem ipsum Do laborum dolore occaecat non deserunt eu sed consequat esse ut sint laborum irure sunt anim mollit enim aliqua culpa commodo sint sint est ad laborum cillum esse.</p>
 
-<h3>Tokenizer</h3>
-
-  [% IF res %]
-  <div class="form-group">
-    <label for="inputTxt" class="col-sm-2 control-label">Response</label>
-    <div class="col-sm-10">
-      <pre class="prettyprint lang-js">[% res %]</pre>
-    </div>
-  </div>
-[% END %]
+		</div>
+		[% END %]
+	</section>
+</main>
+<footer>
+	<div class="container">
+		<div class="terms"> <a href="#">Developer Terms of Use</a></div>
+		<div class="contact-container"> <span class="contact">Numero blah blah</span> | <span class="contact"> email blah blah</span> | <span class="contact">outr blah blah</span></div> <div href="#" class="copywright">copywright something something</div>
+			
+		</div>
+	</div>
+</footer>
 
