@@ -17,8 +17,8 @@
 					[% END %]
 				</ul>
 			</li>
-			<li><a href="#">Demo Section</a></li>
-			<li><a href="#">Contacts</a></li>
+			<li><a href="#demo">Demo Section</a></li>
+			<li><a href="#contacts">Contacts</a></li>
 		</ul>
 	</nav>
 	<section class="content-wrapper">
@@ -26,12 +26,10 @@
 		<a name="[% elem %]"></a>
 		<div class="content">
 			<h1 class="title">[% elem %]</h1>
-			<h4 class="subtitle">Um subtitulo qualquer</h2>
-			<p class="description">Descrição blah blah Lorem ipsum In aliqua eiusmod Ut adipisicing amet adipisicing laboris commodo labore esse exercitation proident anim consequat in eiusmod in sed velit ad nulla in ex. <a href="#">some url</a>
-
-			para ver como preencher o resto do indice: https://developer.spotify.com/web-api/user-guide/</p>
+			<h4 class="subtitle">[% tools.$elem.subtitle %]</h4>
+			<p class="description">[% tools.$elem.description %]</p>
 			<p class="subtitle">URI:</p>
-			<p class="code">http://someurl.com/params</p>
+			<p class="code">/[% elem %]</p>
 			<p class="subtitle">Parameters:</p>
 			<table>
 				<thead>
@@ -41,39 +39,41 @@
 					</tr>
 				</thead>
 				<tbody>
+					[% FOREACH parameter IN tools.$elem.parameters.keys.sort %]
 					<tr>
-						<td>Parametro 1</td>
-						<td class="check-container"><img src="/img/check_icon.png" class="check"></td>
+						<td>[% parameter %]</td>
+						<td class="check-container">
+							[% IF tools.$elem.parameters.$parameter.required == 1 %]
+							<img src="/img/check_icon.png" class="check">
+							[% END %]
+						</td>
 					</tr>
-					<tr>
-						<td>Parametro 2</td>
-						<td class="check-container"><img src="/img/check_icon.png" class="check"></td>
-					</tr>
-					<tr>
-						<td>Parametro 3</td>
-						<td class="check-container"></td>
-					</tr>
-					<tr>
-						<td>Parametro ...</td>
-						<td></td>
-					</tr>
-					<tr>
-						<td>Parametro N</td>
-						<td class="check-container"><img src="/img/check_icon.png" class="check"></td>
-					</tr>
+					[% END %]
 				</tbody>
 			</table>
 			<p class="subtitle">Example:</p>
-			<p class="code">some code with <span class="variable">variables</span></p>
+			<!-- <p class="code">some code with <span class="variable">variables</span></p> -->
+			<p class="code">[% tools.$elem.example.input %]</p>
 			<p class="subtitle">Output:</p>
-			<p class="code">Lorem ipsum Do laborum dolore occaecat non deserunt eu sed consequat esse ut sint laborum irure sunt anim mollit enim aliqua culpa commodo sint sint est ad laborum cillum esse.</p>
+			<p class="code">[% tools.$elem.example.output %]</p>
 
 		</div>
 		[% END %]
+		<br/><br/>
+		<div class="content">
+			<a name="demo"></a>
+			<h1 class="title">DEMO</h1>
+			<p class="description">Descricao da DEMO</p>
+			<p class="subtitle">Input:</p>
+			<p class="code">Input</p>
+			<p class="subtitle">Output:</p>
+			<p class="code">Output</p>
+		</div>
 	</section>
 </main>
 <footer>
 	<div class="container">
+		<a name="contacts"></a>
 		<div class="terms"> <a href="#">Developer Terms of Use</a></div>
 		<div class="contact-container"> <span class="contact">Numero blah blah</span> | <span class="contact"> email blah blah</span> | <span class="contact">outr blah blah</span></div> <div href="#" class="copywright">copywright something something</div>
 			
