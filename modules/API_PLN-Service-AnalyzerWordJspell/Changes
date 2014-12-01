@@ -1,0 +1,6 @@
+Revision history for Perl extension API_PLN::Service::AnalyzerWordJspell.
+
+0.01  Mon Dec  1 09:42:18 2014
+	- original version; created by h2xs 1.23 with options
+		-XAn API_PLN::Service::AnalyzerWordJspell
+

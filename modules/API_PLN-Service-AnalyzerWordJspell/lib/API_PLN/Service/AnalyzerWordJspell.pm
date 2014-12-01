@@ -1,4 +1,4 @@
-package API_PLN::Service::AnalyzerJspell;
+package API_PLN::Service::AnalyzerWordJspell;
 
 use 5.018002;
 use strict;
@@ -28,10 +28,10 @@ my $jspell_dict = Lingua::Jspell->new("pt_PT");
 
 
 my %index_info = (
-  hash_token => 'jspell_analyzer',
+  hash_token => 'jspell_word_analyzer',
   parameters => {
-    text => {
-      description => 'The text to be analyzed',
+    word => {
+      description => 'The word to be analyzed',
       required => 1,
     },
     ner => {
@@ -39,11 +39,11 @@ my %index_info = (
       required => 0,
     },
   },
-  subtitle => 'Subtitulo de jspell_analyzer',
-  description => 'Descricao de jspell_analyzer',
+  subtitle => 'Subtitulo de jspell_word_analyzer',
+  description => 'Descricao de jspell_word_analyzer',
   example => {
-    input => 'exemplo input',
-    output => 'exemplo output',
+    input => 'input',
+    output => '[{"word":"input","pos":"NCMS","lemma":"input","cat":"n"}]',
   },
 );
 
@@ -72,12 +72,12 @@ sub main_function {
 	#return sub {
 		my ($input_params) = @_;
 		my %options = ( lang=>'pt' );
-		my $result = _jspell_analyzer($input_params->{text}, %options);
+		my $result = _jspell_analyzer_word($input_params->{word}, %options);
 		return encode_json $result;
 	#}
 }
 
-sub _jspell_analyzer {
+sub _jspell_analyzer_word {
   my ($word, %options) = @_;
 
   my $result;
