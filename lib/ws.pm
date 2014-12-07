@@ -1,5 +1,5 @@
 package ws;
-package API_PLN::Service;
+package NLPServices;
 
 use Dancer2 ':syntax';
 use strict;
@@ -15,17 +15,25 @@ our $VERSION = '0.1';
 my %routemap = ();
 my %indexmap = ();
 
-my @modulelist = API_PLN::Service->subclasses;
+my @classes = NLPServices->subclasses;
 
-for my $module (@modulelist){
-  my $loadmodule = "API_PLN::Service::".$module;
-  load $loadmodule;
-  my $hash_token = $loadmodule->get_token();
-  $indexmap{$hash_token} = $loadmodule->get_info();
-  $routemap{$hash_token}{param_function} = $loadmodule->can("param_function");
-  $routemap{$hash_token}{main_function}  = $loadmodule->can("main_function");
-  Class::Unload->unload($loadmodule);
+for my $c (@classes) {
+   my $class = "NLPServices::$c";
+
+   my @x = eval "package $class;\n use Class::Factory::Util; $class->subclasses;";
+
+   for my $sc (@x) {
+      my $loadmodule = "$class::$sc";
+      load $loadmodule;
+      my $hash_token = $loadmodule->get_token();
+      $indexmap{$hash_token} = $loadmodule->get_info();
+      $routemap{$hash_token}{param_function} = $loadmodule->can("param_function");
+      $routemap{$hash_token}{main_function}  = $loadmodule->can("main_function");
+      Class::Unload->unload($loadmodule);
+   }
+   print "\n";
 }
+
 
 get '/' => sub {
   template 'index' => {
