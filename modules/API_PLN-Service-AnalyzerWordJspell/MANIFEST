@@ -1,6 +1,0 @@
-Changes
-Makefile.PL
-MANIFEST
-README
-t/API_PLN-Service-AnalyzerWordJspell.t
-lib/API_PLN/Service/AnalyzerWordJspell.pm

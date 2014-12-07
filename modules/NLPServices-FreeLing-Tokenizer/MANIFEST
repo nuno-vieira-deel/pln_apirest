@@ -1,0 +1,6 @@
+Changes
+Makefile.PL
+MANIFEST
+README
+t/NLPServices-FreeLing-Tokenizer.t
+lib/NLPServices/FreeLing/Tokenizer.pm
