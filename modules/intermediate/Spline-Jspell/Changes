@@ -1,0 +1,6 @@
+Revision history for Perl extension Spline::Jspell.
+
+0.01  Sun Feb 15 12:12:53 2015
+	- original version; created by h2xs 1.23 with options
+		-XAn Spline::Jspell
+
