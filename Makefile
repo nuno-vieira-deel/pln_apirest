@@ -18,7 +18,7 @@
 #     LICENSE => q[perl]
 #     NAME => q[ws]
 #     PL_FILES => {  }
-#     PREREQ_PM => { Dancer=>q[1.3116], YAML=>q[0], Test::More=>q[0] }
+#     PREREQ_PM => { Dancer=>q[1.3116], Test::More=>q[0], YAML=>q[0] }
 #     TEST_REQUIRES => {  }
 #     VERSION_FROM => q[lib/ws.pm]
 #     clean => { FILES=>q[ws-*] }
@@ -440,22 +440,22 @@ clean_subdirs :
 
 clean :: clean_subdirs
 	- $(RM_F) \
-	  $(INST_ARCHAUTODIR)/extralibs.all $(BOOTSTRAP) \
-	  perl core.[0-9] \
-	  core perl.exe \
-	  lib$(BASEEXT).def $(MAKE_APERL_FILE) \
-	  perl$(EXE_EXT) core.*perl.*.? \
-	  core.[0-9][0-9][0-9][0-9] so_locations \
-	  $(BASEEXT).bso *$(OBJ_EXT) \
-	  MYMETA.yml pm_to_blib.ts \
-	  *$(LIB_EXT) mon.out \
-	  *perl.core core.[0-9][0-9] \
-	  $(BASEEXT).exp core.[0-9][0-9][0-9] \
-	  blibdirs.ts core.[0-9][0-9][0-9][0-9][0-9] \
-	  MYMETA.json $(BASEEXT).def \
-	  perlmain.c pm_to_blib \
-	  $(INST_ARCHAUTODIR)/extralibs.ld $(BASEEXT).x \
-	  tmon.out 
+	  $(BASEEXT).x MYMETA.json \
+	  core.[0-9] *$(LIB_EXT) \
+	  $(INST_ARCHAUTODIR)/extralibs.all $(BASEEXT).def \
+	  mon.out core.[0-9][0-9][0-9][0-9] \
+	  $(BOOTSTRAP) $(BASEEXT).exp \
+	  $(INST_ARCHAUTODIR)/extralibs.ld *$(OBJ_EXT) \
+	  perl perl.exe \
+	  pm_to_blib.ts tmon.out \
+	  $(MAKE_APERL_FILE) blibdirs.ts \
+	  pm_to_blib core.*perl.*.? \
+	  so_locations core \
+	  perlmain.c $(BASEEXT).bso \
+	  core.[0-9][0-9] MYMETA.yml \
+	  core.[0-9][0-9][0-9][0-9][0-9] *perl.core \
+	  core.[0-9][0-9][0-9] perl$(EXE_EXT) \
+	  lib$(BASEEXT).def 
 	- $(RM_RF) \
 	  ws-* blib 
 	- $(MV) $(FIRST_MAKEFILE) $(MAKEFILE_OLD) $(DEV_NULL)
@@ -470,7 +470,7 @@ realclean_subdirs :
 # Delete temporary files (via clean) and also delete dist files
 realclean purge ::  clean realclean_subdirs
 	- $(RM_F) \
-	  $(FIRST_MAKEFILE) $(MAKEFILE_OLD) 
+	  $(MAKEFILE_OLD) $(FIRST_MAKEFILE) 
 	- $(RM_RF) \
 	  $(DISTVNAME) 
 

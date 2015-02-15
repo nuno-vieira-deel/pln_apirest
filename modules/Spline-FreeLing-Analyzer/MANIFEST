@@ -1,0 +1,6 @@
+Changes
+Makefile.PL
+MANIFEST
+README
+t/Spline-FreeLing-Analyzer.t
+lib/Spline/FreeLing/Analyzer.pm

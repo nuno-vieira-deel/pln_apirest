@@ -1,0 +1,6 @@
+Changes
+Makefile.PL
+MANIFEST
+README
+t/Spline-Jspell-AnalyzerWord.t
+lib/Spline/Jspell/AnalyzerWord.pm

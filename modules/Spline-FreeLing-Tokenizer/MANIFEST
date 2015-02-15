@@ -1,0 +1,6 @@
+Changes
+Makefile.PL
+MANIFEST
+README
+t/Spline-FreeLing-Tokenizer.t
+lib/Spline/FreeLing/Tokenizer.pm

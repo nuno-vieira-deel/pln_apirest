@@ -1,0 +1,6 @@
+Revision history for Perl extension Spline::Services.
+
+0.01  Sun Feb 15 12:19:22 2015
+	- original version; created by h2xs 1.23 with options
+		-XAn Spline::Services
+

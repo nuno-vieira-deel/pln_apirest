@@ -1,0 +1,6 @@
+Changes
+Makefile.PL
+MANIFEST
+README
+t/Spline-FreeLing.t
+lib/Spline/FreeLing.pm
