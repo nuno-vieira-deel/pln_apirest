@@ -1,5 +1,5 @@
 package ws;
-package NLPServices;
+package Spline;
 
 use Dancer2 ':syntax';
 use strict;
@@ -11,14 +11,13 @@ use Class::Unload;
 use Class::Factory::Util;
 
 our $VERSION = '0.1';
-
 my %routemap = ();
 my %indexmap = ();
 
-my @classes = NLPServices->subclasses;
+my @classes = Spline->subclasses;
 
 for my $c (@classes) {
-   my $class = "NLPServices::$c";
+   my $class = "Spline::$c";
 
    my @x = eval "package $class;\n use Class::Factory::Util; $class->subclasses;";
 
@@ -31,7 +30,6 @@ for my $c (@classes) {
       $routemap{$hash_token}{main_function}  = $loadmodule->can("main_function");
       Class::Unload->unload($loadmodule);
    }
-   print "\n";
 }
 
 
