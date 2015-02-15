@@ -20,7 +20,8 @@ charset: "UTF-8"
 
 template: "template_toolkit"
 engines:
-  template_toolkit:
-    start_tag: '[%'
-    end_tag:   '%]'
+ template:
+   template_toolkit:
+     start_tag: '[%'
+     end_tag:   '%]'
 
