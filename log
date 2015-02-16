@@ -1,0 +1,180 @@
+cpanm (App::cpanminus) 1.7024 on perl 5.020001 built for x86_64-linux
+Work directory is /root/.cpanm/work/1424036052.29529
+You have make /usr/bin/make
+You have LWP 6.08
+You have /bin/tar: tar (GNU tar) 1.26
+Copyright (C) 2011 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Written by John Gilmore and Jay Fenlason.
+You have /usr/bin/unzip
+Entering /home/nunovieira220/SplineAPI/modules/intermediate/Spline-FreeLing
+Running Makefile.PL
+--> Working on .
+Configuring /home/nunovieira220/SplineAPI/modules/intermediate/Spline-FreeLing ... Generating a Unix-style Makefile
+Writing Makefile for Spline::FreeLing
+Writing MYMETA.yml and MYMETA.json
+Checking dependencies from MYMETA.json ...
+Checking if you have ExtUtils::MakeMaker 0 ... Yes (7.04)
+OK
+<== Installed dependencies for .. Finishing.
+cpanm (App::cpanminus) 1.7024 on perl 5.020001 built for x86_64-linux
+Work directory is /root/.cpanm/work/1424036053.29538
+You have make /usr/bin/make
+You have LWP 6.08
+You have /bin/tar: tar (GNU tar) 1.26
+Copyright (C) 2011 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Written by John Gilmore and Jay Fenlason.
+You have /usr/bin/unzip
+Entering /home/nunovieira220/SplineAPI/modules/intermediate/Spline-Jspell
+Running Makefile.PL
+--> Working on .
+Configuring /home/nunovieira220/SplineAPI/modules/intermediate/Spline-Jspell ... Generating a Unix-style Makefile
+Writing Makefile for Spline::Jspell
+Writing MYMETA.yml and MYMETA.json
+Checking dependencies from MYMETA.json ...
+Checking if you have ExtUtils::MakeMaker 0 ... Yes (7.04)
+OK
+<== Installed dependencies for .. Finishing.
+cpanm (App::cpanminus) 1.7024 on perl 5.020001 built for x86_64-linux
+Work directory is /root/.cpanm/work/1424036053.29547
+You have make /usr/bin/make
+You have LWP 6.08
+You have /bin/tar: tar (GNU tar) 1.26
+Copyright (C) 2011 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Written by John Gilmore and Jay Fenlason.
+You have /usr/bin/unzip
+Entering /home/nunovieira220/SplineAPI/modules/Spline-FreeLing-Analyzer
+Running Makefile.PL
+--> Working on .
+Configuring /home/nunovieira220/SplineAPI/modules/Spline-FreeLing-Analyzer ... WARNING: Setting ABSTRACT via file 'lib/Spline/FreeLing/Analyzer.pm' failed
+ at /opt/perl-5.20.1/lib/site_perl/5.20.1/ExtUtils/MakeMaker.pm line 663.
+Generating a Unix-style Makefile
+Writing Makefile for Spline::FreeLing::Analyzer
+Writing MYMETA.yml and MYMETA.json
+Checking dependencies from MYMETA.json ...
+Checking if you have ExtUtils::MakeMaker 0 ... Yes (7.04)
+OK
+<== Installed dependencies for .. Finishing.
+cpanm (App::cpanminus) 1.7024 on perl 5.020001 built for x86_64-linux
+Work directory is /root/.cpanm/work/1424036053.29556
+You have make /usr/bin/make
+You have LWP 6.08
+You have /bin/tar: tar (GNU tar) 1.26
+Copyright (C) 2011 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Written by John Gilmore and Jay Fenlason.
+You have /usr/bin/unzip
+Entering /home/nunovieira220/SplineAPI/modules/Spline-FreeLing-AnalyzerWord
+Running Makefile.PL
+--> Working on .
+Configuring /home/nunovieira220/SplineAPI/modules/Spline-FreeLing-AnalyzerWord ... WARNING: Setting ABSTRACT via file 'lib/Spline/FreeLing/AnalyzerWord.pm' failed
+ at /opt/perl-5.20.1/lib/site_perl/5.20.1/ExtUtils/MakeMaker.pm line 663.
+Generating a Unix-style Makefile
+Writing Makefile for Spline::FreeLing::AnalyzerWord
+Writing MYMETA.yml and MYMETA.json
+Checking dependencies from MYMETA.json ...
+Checking if you have ExtUtils::MakeMaker 0 ... Yes (7.04)
+OK
+<== Installed dependencies for .. Finishing.
+cpanm (App::cpanminus) 1.7024 on perl 5.020001 built for x86_64-linux
+Work directory is /root/.cpanm/work/1424036054.29565
+You have make /usr/bin/make
+You have LWP 6.08
+You have /bin/tar: tar (GNU tar) 1.26
+Copyright (C) 2011 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Written by John Gilmore and Jay Fenlason.
+You have /usr/bin/unzip
+Entering /home/nunovieira220/SplineAPI/modules/Spline-FreeLing-Tokenizer
+Running Makefile.PL
+--> Working on .
+Configuring /home/nunovieira220/SplineAPI/modules/Spline-FreeLing-Tokenizer ... WARNING: Setting ABSTRACT via file 'lib/Spline/FreeLing/Tokenizer.pm' failed
+ at /opt/perl-5.20.1/lib/site_perl/5.20.1/ExtUtils/MakeMaker.pm line 663.
+Generating a Unix-style Makefile
+Writing Makefile for Spline::FreeLing::Tokenizer
+Writing MYMETA.yml and MYMETA.json
+Checking dependencies from MYMETA.json ...
+Checking if you have ExtUtils::MakeMaker 0 ... Yes (7.04)
+OK
+<== Installed dependencies for .. Finishing.
+cpanm (App::cpanminus) 1.7024 on perl 5.020001 built for x86_64-linux
+Work directory is /root/.cpanm/work/1424036054.29574
+You have make /usr/bin/make
+You have LWP 6.08
+You have /bin/tar: tar (GNU tar) 1.26
+Copyright (C) 2011 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Written by John Gilmore and Jay Fenlason.
+You have /usr/bin/unzip
+Entering /home/nunovieira220/SplineAPI/modules/Spline-Jspell-AnalyzerWord
+Running Makefile.PL
+--> Working on .
+Configuring /home/nunovieira220/SplineAPI/modules/Spline-Jspell-AnalyzerWord ... WARNING: Setting ABSTRACT via file 'lib/Spline/Jspell/AnalyzerWord.pm' failed
+ at /opt/perl-5.20.1/lib/site_perl/5.20.1/ExtUtils/MakeMaker.pm line 663.
+Generating a Unix-style Makefile
+Writing Makefile for Spline::Jspell::AnalyzerWord
+Writing MYMETA.yml and MYMETA.json
+Checking dependencies from MYMETA.json ...
+Checking if you have ExtUtils::MakeMaker 0 ... Yes (7.04)
+OK
+<== Installed dependencies for .. Finishing.
+cpanm (App::cpanminus) 1.7024 on perl 5.020001 built for x86_64-linux
+Work directory is /root/.cpanm/work/1424036055.29583
+You have make /usr/bin/make
+You have LWP 6.08
+You have /bin/tar: tar (GNU tar) 1.26
+Copyright (C) 2011 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Written by John Gilmore and Jay Fenlason.
+You have /usr/bin/unzip
+Entering /home/nunovieira220/SplineAPI/modules/Spline-Services
+Running Makefile.PL
+--> Working on .
+Configuring /home/nunovieira220/SplineAPI/modules/Spline-Services ... WARNING: Setting ABSTRACT via file 'lib/Spline/Services.pm' failed
+ at /opt/perl-5.20.1/lib/site_perl/5.20.1/ExtUtils/MakeMaker.pm line 663.
+Generating a Unix-style Makefile
+Writing Makefile for Spline::Services
+Writing MYMETA.yml and MYMETA.json
+Checking dependencies from MYMETA.json ...
+Checking if you have ExtUtils::MakeMaker 0 ... Yes (7.04)
+OK
+<== Installed dependencies for .. Finishing.
+cpanm (App::cpanminus) 1.7024 on perl 5.020001 built for x86_64-linux
+Work directory is /root/.cpanm/work/1424036055.29592
+You have make /usr/bin/make
+You have LWP 6.08
+You have /bin/tar: tar (GNU tar) 1.26
+Copyright (C) 2011 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Written by John Gilmore and Jay Fenlason.
+You have /usr/bin/unzip
+Entering /home/nunovieira220/SplineAPI/modules/intermediate
+--> Working on .
+Configuring /home/nunovieira220/SplineAPI/modules/intermediate ... N/A
+! Configuring . failed. See /root/.cpanm/work/1424036055.29592/build.log for details.
