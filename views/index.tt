@@ -1,8 +1,8 @@
 <nav class="breadcrumbs">
 	<div class="container">
 		<ul>
-			<li><a href="#">Home</a></li>
-			<li><a href="#" class="active">Página X</a></li>
+			<li><a href="#">SplineAPI</a></li>
+			<!-- <li><a href="#" class="active">Página X</a></li> -->
 		</ul>
 	</div>
 </nav>
@@ -23,41 +23,41 @@
 	</nav>
 	<section class="content-wrapper">
 		[% FOREACH elem IN tools.keys.sort %]
-		<a name="[% elem %]"></a>
-		<div class="content">
-			<h1 class="title">[% elem %]</h1>
-			<h4 class="subtitle">[% tools.$elem.subtitle %]</h4>
-			<p class="description">[% tools.$elem.description %]</p>
-			<p class="subtitle">URI:</p>
-			<p class="code">/[% elem %]</p>
-			<p class="subtitle">Parameters:</p>
-			<table>
-				<thead>
-					<tr>
-						<th class="max">Name</th>
-						<th class="check-container">Required</th>
-					</tr>
-				</thead>
-				<tbody>
-					[% FOREACH parameter IN tools.$elem.parameters.keys.sort %]
-					<tr>
-						<td>[% parameter %]</td>
-						<td class="check-container">
-							[% IF tools.$elem.parameters.$parameter.required == 1 %]
-							<img src="/img/check_icon.png" class="check">
-							[% END %]
-						</td>
-					</tr>
-					[% END %]
-				</tbody>
-			</table>
-			<p class="subtitle">Example:</p>
-			<!-- <p class="code">some code with <span class="variable">variables</span></p> -->
-			<p class="code">[% tools.$elem.example.input %]</p>
-			<p class="subtitle">Output:</p>
-			<p class="code">[% tools.$elem.example.output %]</p>
+			<a name="[% elem %]"></a>
+			<div class="content">
+				<h1 class="title">[% elem %]</h1>
+				<h4 class="subtitle">[% tools.$elem.subtitle %]</h4>
+				<p class="description">[% tools.$elem.description %]</p>
+				<p class="subtitle">URI:</p>
+				<p class="code">/[% elem %]</p>
+				<p class="subtitle">Parameters:</p>
+				<table>
+					<thead>
+						<tr>
+							<th class="max">Name</th>
+							<th class="check-container">Required</th>
+						</tr>
+					</thead>
+					<tbody>
+						[% FOREACH parameter IN tools.$elem.parameters.keys.sort %]
+						<tr>
+							<td>[% parameter %]</td>
+							<td class="check-container">
+								[% IF tools.$elem.parameters.$parameter.required == 1 %]
+								<img src="/img/check_icon.png" class="check">
+								[% END %]
+							</td>
+						</tr>
+						[% END %]
+					</tbody>
+				</table>
+				<p class="subtitle">Example:</p>
+				<!-- <p class="code">some code with <span class="variable">variables</span></p> -->
+				<p class="code">[% tools.$elem.example.input %]</p>
+				<p class="subtitle">Output:</p>
+				<p class="code">[% tools.$elem.example.output %]</p>
 
-		</div>
+			</div>
 		[% END %]
 		<br/><br/>
 		<div class="content">
