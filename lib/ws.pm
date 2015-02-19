@@ -63,11 +63,17 @@ post '/sign_in' => sub {
   my %input_params = params;
   my $user_email = $input_params{email};
 
-  add_user($user_email) if (has_user($user_email) == 0);
+  if (!$input_params{'g-recaptcha-response'} eq ''){
+    if (has_user($user_email) == 0){
+      add_user($user_email) ;
+      redirect '/';
+    }
+    else{
+      redirect '/register'; # meter erros
+    }
+  }
 
-  template 'index' => {
-    tools => \%indexmap
-  };
+  redirect '/register'; # meter erros
 };
 
 any ['get', 'post'] => '/*' => sub {
@@ -109,4 +115,10 @@ sub add_user{
 
   my $stmt = qq(INSERT INTO api_users(api_token, email, requests) VALUES ("$token_final", "$user_email", 0));
   my $rv = $dbh->do($stmt) or die $DBI::errstr;
+
+  send_user_email($user_email, $random_token);
+}
+
+sub send_user_email{
+  my ($user_email, $token) = @_;
 }
