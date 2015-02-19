@@ -1,0 +1,16 @@
+<nav class="breadcrumbs">
+	<div class="container">
+		<ul>
+			<li><a href="#">SplineAPI</a></li>
+			<!-- <li><a href="#" class="active">Página X</a></li> -->
+		</ul>
+	</div>
+</nav>
+<main class="container" style="text-align:center">
+	<h2>Formulário de Registo</h2>
+	<form action="/sign_in" method="post">
+		<label for="email"></label>
+		<input type="email" name="email"/>
+		<input type="submit" value="Submit"/>
+	</form>
+</main>
