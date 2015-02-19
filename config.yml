@@ -25,3 +25,15 @@ template:
     start_tag: '[%'
     end_tag:   '%]'
 
+
+
+plugins:
+  Emailesque:
+    from: splineapi@gmail.com
+    # for gmail...
+    ssl: 1
+    driver: smtp
+    host: smtp.googlemail.com
+    port: 465
+    user: splineapi@gmail.com
+    pass: splinepassword

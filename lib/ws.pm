@@ -11,6 +11,7 @@ use Class::Unload;
 use Class::Factory::Util;
 use Digest::SHA qw(sha1 sha256);
 use DBI;
+use Dancer2::Plugin::Emailesque;
 our $VERSION = '0.1';
 
 my $driver   = "SQLite"; 
@@ -63,7 +64,7 @@ post '/sign_in' => sub {
   my %input_params = params;
   my $user_email = $input_params{email};
 
-  if (!$input_params{'g-recaptcha-response'} eq ''){
+  #if (!$input_params{'g-recaptcha-response'} eq ''){
     if (has_user($user_email) == 0){
       add_user($user_email) ;
       redirect '/';
@@ -71,7 +72,7 @@ post '/sign_in' => sub {
     else{
       redirect '/register'; # meter erros
     }
-  }
+  #}
 
   redirect '/register'; # meter erros
 };
@@ -116,9 +117,15 @@ sub add_user{
   my $stmt = qq(INSERT INTO api_users(api_token, email, requests) VALUES ("$token_final", "$user_email", 0));
   my $rv = $dbh->do($stmt) or die $DBI::errstr;
 
-  send_user_email($user_email, $random_token);
+  send_email_to_user($user_email, $random_token);
 }
 
-sub send_user_email{
+sub send_email_to_user{
   my ($user_email, $token) = @_;
+
+  email { to => "$user_email",
+        subject => "Your daily mail",
+        message => "O seu token é: $token\n" };
+
+  print "Email Sent Successfully\n";
 }
