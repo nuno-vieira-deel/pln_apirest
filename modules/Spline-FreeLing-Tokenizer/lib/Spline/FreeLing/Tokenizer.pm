@@ -25,6 +25,10 @@ our $VERSION = '0.01';
 my %index_info = (
   hash_token => 'tokenizer',
   parameters => {
+    api_token => {
+      description => 'The token to be indentified',
+      required => 1,
+    },
     text => {
       description => 'The text to be tokenized',
       required => 1,
@@ -36,6 +40,11 @@ my %index_info = (
     input => 'O input.',
     output => '["O","input","."]',
   },
+  cost => 1,
+  text_cost => {
+    10 => 1,
+    1000 => 2,
+  },
 );
 
 sub get_token {
@@ -46,8 +55,25 @@ sub get_info {
   return \%index_info;
 }
 
+sub cost_function{
+  my ($input_params) = @_;
+  my $cost_result = 0;
+  my $text_length = length($input_params->{text});
+
+  for my $cost (keys %{$index_info{text_cost}}){
+    if($text_length >= int($cost)){
+      $cost_result = int($index_info{text_cost}{$cost});
+    }
+    else{
+      last;
+    }
+  }
+
+  my $final_cost = $cost_result + int($index_info{cost});
+  return $final_cost;
+}
+
 sub param_function {
-#  return sub {
     my ($input_params) = @_;
     my $flag = 1;
     for my $param (keys %{$index_info{parameters}}){
@@ -56,9 +82,7 @@ sub param_function {
       }
     }
     return $flag;
- # }
 }
-
 
 sub main_function {
   #return sub {

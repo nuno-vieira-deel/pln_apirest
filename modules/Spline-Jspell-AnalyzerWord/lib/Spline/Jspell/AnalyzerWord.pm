@@ -30,6 +30,10 @@ my $jspell_dict = Lingua::Jspell->new("pt_PT");
 my %index_info = (
   hash_token => 'jspell_word_analyzer',
   parameters => {
+    api_token => {
+      description => 'The token to be indentified',
+      required => 1,
+    },
     word => {
       description => 'The word to be analyzed',
       required => 1,
@@ -45,6 +49,10 @@ my %index_info = (
     input => 'input',
     output => '[{"word":"input","pos":"NCMS","lemma":"input","cat":"n"}]',
   },
+  cost => 2,
+  text_cost => {
+    30 => 1,
+  },
 );
 
 sub get_token {
@@ -53,6 +61,24 @@ sub get_token {
 
 sub get_info {
   return \%index_info;
+}
+
+sub cost_function{
+  my ($input_params) = @_;
+  my $cost_result = 0;
+  my $text_length = length($input_params->{word});
+
+  for my $cost (keys %{$index_info{text_cost}}){
+    if($text_length >= int($cost)){
+      $cost_result = int($index_info{text_cost}{$cost});
+    }
+    else{
+      last;
+    }
+  }
+
+  my $final_cost = $cost_result + int($index_info{cost});
+  return $final_cost;
 }
 
 sub param_function {
