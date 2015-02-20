@@ -1,0 +1,19 @@
+<nav class="breadcrumbs">
+	<div class="container">
+		<ul>
+			<li><a href="/">SplineAPI</a></li>
+			<li><a href="/register" class="active">Register</a></li>
+		</ul>
+	</div>
+</nav>
+<main class="container" style="text-align:center">
+	<h2>Formulário de Registo</h2>
+	<form action="/sign_in" method="post">
+		<label for="email"></label>
+		<input type="email" name="email" required/>
+		<br/>
+			<div class="g-recaptcha" data-sitekey="6LceWQITAAAAAAvIEiFeHtzYWRwxl-pJIXQt2wH5"></div>
+		<br/>
+		<input type="submit" value="Submit"/>
+	</form>
+</main>

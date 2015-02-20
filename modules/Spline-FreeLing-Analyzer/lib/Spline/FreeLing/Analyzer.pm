@@ -35,6 +35,10 @@ my $fl3_morph_pt = Lingua::FreeLing3::MorphAnalyzer->new('pt',
 my %index_info = (
   hash_token => 'fl3_analyzer',
   parameters => {
+    api_token => {
+      description => 'The token to be indentified',
+      required => 1,
+    },
     text => {
       description => 'The text to be analyzed',
       required => 1,
@@ -50,6 +54,11 @@ my %index_info = (
     input => 'O input.',
     output => '[{"lemma":"o","pos":"DA0MS0","word":"O"},{"lemma":"input","pos":"NCMS000","word":"input"},{"pos":"Fp","lemma":".","word":"."}]',
   },
+  cost => 2,
+  text_cost => {
+    500 => 1,
+    1000 => 2,
+  },
 );
 
 sub get_token {
@@ -58,6 +67,24 @@ sub get_token {
 
 sub get_info {
   return \%index_info;
+}
+
+sub cost_function{
+  my ($input_params) = @_;
+  my $cost_result = 0;
+  my $text_length = length($input_params->{text});
+
+  for my $cost (keys %{$index_info{text_cost}}){
+    if($text_length >= int($cost)){
+      $cost_result = int($index_info{text_cost}{$cost});
+    }
+    else{
+      last;
+    }
+  }
+
+  my $final_cost = $cost_result + int($index_info{cost});
+  return $final_cost;
 }
 
 sub param_function {
