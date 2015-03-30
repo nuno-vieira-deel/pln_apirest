@@ -63,11 +63,22 @@
 		<div class="content">
 			<a name="demo"></a>
 			<h1 class="title">DEMO</h1>
-			<p class="description">Descricao da DEMO</p>
-			<p class="subtitle">Input:</p>
-			<p class="code">Input</p>
-			<p class="subtitle">Output:</p>
-			<p class="code">Output</p>
+			<p class="description">Simple Demo to test the PLN tools.</p>
+			<form id="demoForm">
+				<p class="subtitle">Input:</p>
+				<input type="text" name="input_text" id="input_text" class="code"/>
+				<p class="subtitle">Parameter:</p>
+				<select name="pln_token" id="pln_token">
+					[% FOREACH elem IN tools.keys.sort %]
+						<option value="[% elem %]">[% elem %]</option>
+					[% END %]
+				</select>
+				<p class="subtitle">API Token:</p>
+				<input type="text" name="api_token" id="api_token" class="code"/>
+				<p class="subtitle">Output:</p>
+				<p class="code" id="output_text"></p>
+				<input name="submit" type="submit" value="Submit">
+			</form>
 		</div>
 	</section>
 </main>
