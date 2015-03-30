@@ -37,3 +37,12 @@ plugins:
     port: 465
     user: splineapi@gmail.com
     pass: splinepassword
+  Database:
+    driver: SQLite
+    database: 'spline.sqlite'
+    host: 'localhost'
+    connection_check_threshold: 20
+    dbi_params:
+        RaiseError: 1
+        AutoCommit: 1
+    on_connect_do: ["create table if not exists api_users (api_token varchar(100), email varchar(100), requests integer);"]
