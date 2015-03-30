@@ -12,6 +12,7 @@ use Class::Factory::Util;
 use Digest::SHA qw(sha1 sha256_hex);
 use DBI;
 use Dancer2::Plugin::Emailesque;
+
 our $VERSION = '0.1';
 
 my $driver   = "SQLite"; 
@@ -20,6 +21,7 @@ my $dsn = "DBI:$driver:dbname=$database";
 my $userid = "";
 my $password = "";
 my $dbh = DBI->connect($dsn, $userid, $password, { RaiseError => 1 }) or die $DBI::errstr;
+
 
 my $request_limit = 1000;
 my %routemap = ();
@@ -109,6 +111,7 @@ sub do_request{
   }
   my $result = 0;
   my @row = $sth->fetchrow_array();
+  if(!$row[2]){ return 0;}
   my $old_requests = int($row[2]);
 
   if($request_limit-($old_requests+$cost) >= 0){
