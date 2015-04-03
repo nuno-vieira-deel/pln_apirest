@@ -17,10 +17,6 @@ my %index_info = (
       description => 'The word to be analyzed',
       required => 1,
     },
-    ner => {
-      description => 'Named-entity recognition',
-      required => 0,
-    },
   },
   subtitle => 'Subtitulo de jspell_word_analyzer',
   description => 'Descricao de jspell_word_analyzer',

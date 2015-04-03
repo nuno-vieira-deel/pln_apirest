@@ -20,6 +20,7 @@ my %index_info = (
     ner => {
       description => 'Named-entity recognition',
       required => 0,
+      default => 0,
     },
   },
   subtitle => 'Subtitulo de fl3_analyzer',
@@ -82,7 +83,7 @@ sub main_function {
 sub _fl3_analyzer {
   my ($input_params) = @_;
   my $text = $input_params->{text};
-  my $ner = 0;
+  my $ner = $index_info{parameters}{ner}{default};
   $ner = $input_params->{ner} if exists $input_params->{ner};
   return unless $text;
 
