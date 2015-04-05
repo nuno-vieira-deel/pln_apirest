@@ -4,23 +4,6 @@ use 5.018002;
 use strict;
 use warnings;
 use JSON;
-use URI::Escape;
-use FL3 'pt';
-use Lingua::FreeLing3::Sentence;
-use Lingua::FreeLing3::Utils qw/word_analysis/;
-
-require Exporter;
-
-our @ISA = qw(Exporter);
-our %EXPORT_TAGS = ( 'all' => [ qw(
-	
-) ] );
-our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
-our @EXPORT = qw(
-
-);
-our $VERSION = '0.01';
-
 
 my %index_info = (
   hash_token => 'tokenizer',
@@ -74,26 +57,25 @@ sub cost_function{
 }
 
 sub param_function {
-    my ($input_params) = @_;
-    my $flag = 1;
-    for my $param (keys %{$index_info{parameters}}){
-      if ($index_info{parameters}{$param}{required} == 1){
-        $flag = 0 if (!exists($input_params->{$param}));
-      }
+  my ($input_params) = @_;
+  my $flag = 1;
+  for my $param (keys %{$index_info{parameters}}){
+    if ($index_info{parameters}{$param}{required} == 1){
+      $flag = 0 if (!exists($input_params->{$param}));
     }
-    return $flag;
+  }
+  return $flag;
 }
 
 sub main_function {
-  #return sub {
-    my ($input_params) = @_;
-    my $tokens = _fl3_tokenizer($input_params->{text});
-    return encode_json $tokens;
-  #}
+  my ($input_params) = @_;
+  my $tokens = _fl3_tokenizer($input_params);
+  return encode_json $tokens;
 }
 
 sub _fl3_tokenizer {
-  my ($text) = @_;
+  my ($input_params) = @_;
+  my $text = $input_params->{text};
   return unless $text;
 
   my $pt_tok = Lingua::FreeLing3::Tokenizer->new("pt");

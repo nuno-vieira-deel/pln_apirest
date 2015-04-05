@@ -106,7 +106,6 @@ sub do_request{
     return 1;
   }
   else{ return 0; }
-
 }
 
 sub has_user{

@@ -1,0 +1,6 @@
+Changes
+Makefile.PL
+MANIFEST
+README
+t/Spline-Tool-Tokenizer2.t
+lib/Spline/Tool/Tokenizer2.pm

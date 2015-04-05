@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+    <xs:element name="service">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="tool" type="xs:string"/>
+                <xs:element name="name" type="xs:string"/>
+                <xs:element name="packages" minOccurs="0">
+                    <xs:complexType>
+                        <xs:sequence maxOccurs="unbounded" minOccurs="0">
+                            <xs:element name="package" type="xs:string"> </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="info">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="hash_token" type="xs:string"/>
+                            <xs:element name="parameters">
+                                <xs:complexType>
+                                    <xs:sequence maxOccurs="unbounded" minOccurs="0">
+                                        <xs:element name="parameter">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                  <xs:element name="param_name" type="xs:string"/>
+                                                  <xs:element name="param_description"
+                                                  type="xs:string" minOccurs="0"/>
+                                                  <xs:element maxOccurs="1" minOccurs="0"
+                                                  name="param_default" type="xs:anyType"/>
+                                                </xs:sequence>
+                                                <xs:attribute name="required" type="xs:boolean"/>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="subtitle" type="xs:string" minOccurs="0"/>
+                            <xs:element name="description" type="xs:string" minOccurs="0"/>
+                            <xs:element name="example" minOccurs="0">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="input" type="xs:string"/>
+                                        <xs:element name="output" type="xs:string"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="cost" type="xs:integer"/>
+                            <xs:element name="text_costs" minOccurs="0">
+                                <xs:complexType>
+                                    <xs:sequence maxOccurs="unbounded" minOccurs="0">
+                                        <xs:element name="text_cost">
+                                            <xs:complexType>
+                                                <xs:attribute name="length" type="xs:integer"/>
+                                                <xs:attribute name="cost" type="xs:integer"/>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="code" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

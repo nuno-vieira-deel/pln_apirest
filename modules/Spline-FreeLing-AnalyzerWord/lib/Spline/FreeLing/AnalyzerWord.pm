@@ -4,29 +4,7 @@ use 5.018002;
 use strict;
 use warnings;
 use JSON;
-use URI::Escape;
 use FL3 'pt';
-use Lingua::FreeLing3::Sentence;
-use Lingua::FreeLing3::Utils qw/word_analysis/;
-
-require Exporter;
-
-our @ISA = qw(Exporter);
-
-our %EXPORT_TAGS = ( 'all' => [ qw(
-) ] );
-
-our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
-our @EXPORT = qw( 
-);
-
-our $VERSION = '0.01';
-
-my $fl3_morph_pt = Lingua::FreeLing3::MorphAnalyzer->new('pt',
-    ProbabilityAssignment  => 0, QuantitiesDetection    => 0,
-    MultiwordsDetection    => 0, NumbersDetection       => 0,
-    DatesDetection         => 0, NERecognition          => 0,
-  );
 
 my %index_info = (
   hash_token => 'fl3_word_analyzer',
@@ -42,6 +20,7 @@ my %index_info = (
     ner => {
       description => 'Named-entity recognition',
       required => 0,
+      default => 0,
     },
   },
   subtitle => 'Subtitulo de fl3_word_analyzer',
@@ -64,7 +43,6 @@ sub get_info {
   return \%index_info;
 }
 
-
 sub cost_function{
   my ($input_params) = @_;
   my $cost_result = 0;
@@ -84,28 +62,36 @@ sub cost_function{
 }
 
 sub param_function {
-#  return sub {
-    my ($input_params) = @_;
-    my $flag = 1;
-    for my $param (keys %{$index_info{parameters}}){
-      if ($index_info{parameters}{$param}{required} == 1){
-        $flag = 0 if (!exists($input_params->{$param}));
-      }
+  my ($input_params) = @_;
+  my $flag = 1;
+  for my $param (keys %{$index_info{parameters}}){
+    if ($index_info{parameters}{$param}{required} == 1){
+      $flag = 0 if (!exists($input_params->{$param}));
     }
-    return $flag;
- # }
+  }
+  return $flag;
 }
 
 sub main_function {
   my ($input_params) = @_;
-  my %options = ( lang=>'pt' );
-  my $result = _fl3_analyzer_word($input_params->{word}, %options);
+  my $result = _fl3_analyzer_word($input_params);
   return encode_json $result;
 }
 
 sub _fl3_analyzer_word {
-  my ($word, %options) = @_;
+  my ($input_params) = @_;
+  my $word = $input_params->{word};
+  my $ner = $index_info{parameters}{ner}{default};
+  $ner = $input_params->{ner} if exists $input_params->{ner};
   return unless $word;
+
+  my %options = ( lang=>'pt' );
+
+  my $fl3_morph_pt = Lingua::FreeLing3::MorphAnalyzer->new('pt',
+    ProbabilityAssignment  => 0, QuantitiesDetection    => 0,
+    MultiwordsDetection    => 0, NumbersDetection       => 0,
+    DatesDetection         => 0, NERecognition          => 0,
+  );
 
   my $words = tokenizer($options{lang})->tokenize($word);
   

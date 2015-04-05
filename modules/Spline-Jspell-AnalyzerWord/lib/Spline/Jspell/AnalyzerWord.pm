@@ -4,28 +4,7 @@ use 5.018002;
 use strict;
 use warnings;
 use JSON;
-use URI::Escape;
 use Lingua::Jspell;
-
-require Exporter;
-
-our @ISA = qw(Exporter);
-
-
-our %EXPORT_TAGS = ( 'all' => [ qw(
-	
-) ] );
-
-our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
-
-our @EXPORT = qw(
-	
-);
-
-our $VERSION = '0.01';
-
-my $jspell_dict = Lingua::Jspell->new("pt_PT");
-
 
 my %index_info = (
   hash_token => 'jspell_word_analyzer',
@@ -37,10 +16,6 @@ my %index_info = (
     word => {
       description => 'The word to be analyzed',
       required => 1,
-    },
-    ner => {
-      description => 'Named-entity recognition',
-      required => 0,
     },
   },
   subtitle => 'Subtitulo de jspell_word_analyzer',
@@ -82,30 +57,29 @@ sub cost_function{
 }
 
 sub param_function {
-#  return sub {
-    my ($input_params) = @_;
-    my $flag = 1;
-    for my $param (keys %{$index_info{parameters}}){
-      if ($index_info{parameters}{$param}{required} == 1){
-        $flag = 0 if (!exists($input_params->{$param}));
-      }
+  my ($input_params) = @_;
+  my $flag = 1;
+  for my $param (keys %{$index_info{parameters}}){
+    if ($index_info{parameters}{$param}{required} == 1){
+      $flag = 0 if (!exists($input_params->{$param}));
     }
-    return $flag;
- # }
+  }
+  return $flag;
 }
 
 sub main_function {
-	#return sub {
-		my ($input_params) = @_;
-		my %options = ( lang=>'pt' );
-		my $result = _jspell_analyzer_word($input_params->{word}, %options);
-		return encode_json $result;
-	#}
+	my ($input_params) = @_;
+	my $result = _jspell_analyzer_word($input_params);
+	return encode_json $result;
 }
 
 sub _jspell_analyzer_word {
-  my ($word, %options) = @_;
+  my ($input_params) = @_;
+  my $word = $input_params->{word};
+  return unless $word;
 
+  my $jspell_dict = Lingua::Jspell->new("pt_PT");
+  my %options = ( lang=>'pt' );
   my $result;
 
   foreach ( $jspell_dict->featagsrad($word) ) {
