@@ -1,18 +1,22 @@
-# Before 'make install' is performed this script should be runnable with
-# 'make test'. After 'make install' it should work as 'perl Spline-FreeLing-Tokenizer.t'
-
-#########################
-
-# change 'tests => 1' to 'tests => last_test_to_print';
-
 use strict;
 use warnings;
+use HTTP::Tiny;
+use Data::Dumper;
+use JSON;
 
-use Test::More tests => 1;
+use Test::More tests => 3;
 BEGIN { use_ok('Spline::FreeLing::Tokenizer') };
 
-#########################
+my $host = $ENV{SPLINE_HOST} || 'localhost';
+my $port = $ENV{SPLINE_PORT} || 8080;
 
-# Insert your test code below, the Test::More module is use()ed here so read
-# its man page ( perldoc Test::More ) for help writing this test script.
+my %params = ();
+$params{api_token} = 'KajMZtKtTt';
+$params{text} = 'Eu sou o Nuno.';
 
+my $got = HTTP::Tiny->new->post_form("http://".$host.":".$port."/tokenizer", \%params);
+my $got2 = decode_json($got->{content});
+my @res = ('Eu', 'sou', 'o', 'Nuno', '.');
+
+ok($got2->[0] eq $res[0], "Simple input-output test");
+ok((scalar @{$got2}) == (scalar @res), "Test the result length");
