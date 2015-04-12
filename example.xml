@@ -36,4 +36,16 @@
   	my $tokens = $pt_tok->tokenize($text, to_text => 1);
   	return $tokens;
   	</code>
+	<tests>
+		<test>
+			<test_param param_name="text">
+				Eu sou o Nuno.
+			</test_param>
+			<test_code>my @final = ('Eu', 'sou', 'o', 'Nuno', '.'); 
+ok($result->[0] eq $final[0], "Simple input-output test");</test_code>
+			<test_code>
+				ok((scalar @{$result}) == (scalar @final), "Test the result length");
+			</test_code>
+		</test>
+	</tests>
 </service>

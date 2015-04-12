@@ -28,7 +28,8 @@
                                                   <xs:element maxOccurs="1" minOccurs="0"
                                                   name="param_default" type="xs:anyType"/>
                                                 </xs:sequence>
-                                                <xs:attribute name="required" type="xs:boolean"/>
+                                                <xs:attribute name="required" type="xs:boolean"
+                                                  use="required"/>
                                             </xs:complexType>
                                         </xs:element>
                                     </xs:sequence>
@@ -50,8 +51,10 @@
                                     <xs:sequence maxOccurs="unbounded" minOccurs="0">
                                         <xs:element name="text_cost">
                                             <xs:complexType>
-                                                <xs:attribute name="length" type="xs:integer"/>
-                                                <xs:attribute name="cost" type="xs:integer"/>
+                                                <xs:attribute name="length" type="xs:integer"
+                                                  use="required"/>
+                                                <xs:attribute name="cost" type="xs:integer"
+                                                  use="required"/>
                                             </xs:complexType>
                                         </xs:element>
                                     </xs:sequence>
@@ -61,6 +64,30 @@
                     </xs:complexType>
                 </xs:element>
                 <xs:element name="code" type="xs:string"/>
+                <xs:element minOccurs="0" name="tests">
+                    <xs:complexType>
+                        <xs:sequence maxOccurs="unbounded" minOccurs="0">
+                            <xs:element name="test">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element maxOccurs="unbounded" name="test_param">
+                                            <xs:complexType>
+                                                <xs:simpleContent>
+                                                  <xs:extension base="xs:string">
+                                                  <xs:attribute name="param_name" type="xs:string"
+                                                  use="required"/>
+                                                  </xs:extension>
+                                                </xs:simpleContent>
+                                            </xs:complexType>
+                                        </xs:element>
+                                        <xs:element maxOccurs="unbounded" minOccurs="0"
+                                            name="test_code" type="xs:string"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
             </xs:sequence>
         </xs:complexType>
     </xs:element>

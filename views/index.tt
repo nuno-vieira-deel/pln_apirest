@@ -51,8 +51,30 @@
 						[% END %]
 					</tbody>
 				</table>
-				<p class="subtitle">Example:</p>
+				<p class="subtitle">Cost:</p>
+				<p class="code">[% tools.$elem.cost %]</p>
+				<p class="subtitle">Cost per Text Length:</p>
+				<table>
+					<thead>
+						<tr>
+							<th class="max">length</th>
+							<th class="check-container">Cost</th>
+						</tr>
+					</thead>
+					<tbody>
+						[% FOREACH parameter IN tools.$elem.text_cost.keys.sort %]
+						<tr>
+							<td>[% parameter %]</td>
+							<td>
+								[% tools.$elem.text_cost.$parameter %]
+							</td>
+						</tr>
+						[% END %]
+					</tbody>
+				</table>
+				<p class="subtitle">Example</p>
 				<!-- <p class="code">some code with <span class="variable">variables</span></p> -->
+				<p class="subtitle">Input:</p>
 				<p class="code">[% tools.$elem.example.input %]</p>
 				<p class="subtitle">Output:</p>
 				<p class="code">[% tools.$elem.example.output %]</p>
