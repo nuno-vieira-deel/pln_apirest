@@ -14,9 +14,9 @@ my %params = ();
 $params{api_token} = 'KajMZtKtTt';
 $params{text} = 'Eu sou o Nuno.';
 
-my $got = HTTP::Tiny->new->post_form("http://".$host.":".$port."/tokenizer", \%params);
-my $got2 = decode_json($got->{content});
+my $got2 = HTTP::Tiny->new->post_form("http://".$host.":".$port."/tokenizer", \%params);
+my $got = decode_json($got2->{content});
 my @res = ('Eu', 'sou', 'o', 'Nuno', '.');
 
-ok($got2->[0] eq $res[0], "Simple input-output test");
-ok((scalar @{$got2}) == (scalar @res), "Test the result length");
+ok($got->[0] eq $res[0], "Simple input-output test");
+ok((scalar @{$got}) == (scalar @res), "Test the result length");

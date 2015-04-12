@@ -15,7 +15,7 @@ use Dancer2::Plugin::Emailesque;
 use Dancer2::Plugin::Database;
 our $VERSION = '0.1';
 
-my $request_limit = 1000;
+#my $request_limit = 1000;
 my %routemap = ();
 my %indexmap = ();
 
@@ -99,6 +99,7 @@ sub do_request{
   my $row = database->quick_select('api_users', { api_token => $encryptoken });
   return 0 if(!$row->{email});
   my $old_requests = $row->{requests};
+  my $request_limit = $row->{request_limit};
 
   if($request_limit-($old_requests+$cost) >= 0){
     my $new_requests = $old_requests + $cost;
@@ -132,7 +133,7 @@ sub send_email_to_user{
 
   email { to => "$user_email",
         subject => "Here is your token",
-        message => "Your token is: $token .\nYou have $request_limit request coins a day in our platform where different functionalities have different cost.\nEnjoy!\nBest regards, SplineAPI owners." };
+        message => "Your token is: $token .\nYou initially have 1000 request coins a day in our platform where different functionalities have different cost.\nEnjoy!\nBest regards, SplineAPI owners." };
 
   return 1;
 }

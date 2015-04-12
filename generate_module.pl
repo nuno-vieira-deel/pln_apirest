@@ -8,6 +8,7 @@ use warnings;
 use experimental 'smartmatch';
 use Switch;
 use Scalar::Util qw(looks_like_number);
+use String::Util qw(trim);
 
 my $filename = shift;
 my $flag = shift;
@@ -27,6 +28,9 @@ my $tool;
 my $service;
 my $fh;
 my %hash_info = ();
+my %tests = ();
+my $aux_test = 0;
+my $test_number = 1;
 my $last_param = 0;
 
 $hash_info{hash_token} = "";
@@ -38,14 +42,13 @@ $hash_info{cost} = 0;
 $hash_info{parameters} = ();
 $hash_info{text_cost} = ();
 
+
 # Variable Reference
 # $c - contents after child processing
 # $q - element name (tag)
 # %v - hash of attributes
 
 my %handler=(
-#    '-outputenc' => 'ISO-8859-1',
-#    '-default'   => sub{"<$q>$c</$q>"},
 	 '-default'   => sub{""},
 	 '-begin' => sub{
 			 		if($flag){
@@ -59,9 +62,9 @@ my %handler=(
 			 	},
 	 	'-end'	=> sub{ 
 	 									#system("sh module_installer.sh");
+	 									close($fh);
 	 									system("cd modules/intermediate/Spline-$tool; cpanm -S -v .");
 	 									system("cd modules/Spline-$tool-$service; cpanm -S -v .");
-	 									close($fh); 
 	 								},
     'code' => sub{ 
     								print $fh create_hash_info(%hash_info); 
@@ -104,6 +107,18 @@ my %handler=(
     'parameters' => sub{""},
     'service' => sub{""},
     'subtitle' => sub{ $hash_info{subtitle} = $c; },
+    'test' => sub {
+		    			create_tests($tool, $service, $aux_test, $test_number, $hash_info{hash_token},  %tests);
+		    			%tests = ();
+		    			$aux_test = 0;
+		    			$test_number++;
+		    		},
+    'test_code' => sub {
+							push @{$tests{test_code}}, trim($c);
+							$aux_test++;
+						},
+    'test_param' => sub { $tests{test_param}{$v{param_name}} = trim($c); },
+    'tests' => sub {""},
     'text_cost' => sub{ 
      									my %pair = ();
      									$pair{cost} = $v{cost};
@@ -210,4 +225,41 @@ sub create_main_function{
 	$result .= "\n}\n\n1;\n__END__";
 
 	return $result;
+}
+
+sub create_tests{
+	my ($tool, $service, $aux_test, $test_number, $hash_token, %tests) = @_;
+
+	$aux_test++;
+
+	my $tfh;
+	open($tfh, '>', "modules/Spline-$tool-$service/t/generated_test".$test_number."_to_".lc($tool)."_".lc($service).".t");
+
+	print $tfh "use strict;\n";
+	print $tfh "use warnings;\n";
+	print $tfh "use HTTP::Tiny;\n";
+	print $tfh "use Data::Dumper;\n";
+	print $tfh "use JSON;\n\n";
+
+	print $tfh "use Test::More tests => $aux_test;\n";
+	print $tfh "BEGIN { use_ok('Spline::$tool::$service') };\n\n";
+
+	print $tfh "my \$host = \$ENV{SPLINE_HOST} || 'localhost';\n";
+	print $tfh "my \$port = \$ENV{SPLINE_PORT} || 8080;\n\n";
+
+	print $tfh "my \%params = ();\n";
+	print $tfh "\$params{api_token} = 'KajMZtKtTt';\n";
+
+	for my $param (keys %{$tests{test_param}}){
+		print $tfh "\$params{$param} = '".$tests{test_param}{$param}."';\n";
+	}
+
+	print $tfh "\nmy \$got = HTTP::Tiny->new->post_form(\"http://\".\$host.\":\".\$port.\"/$hash_token\", \\\%params);\n";
+	print $tfh "my \$result = decode_json(\$got->{content});\n\n";
+
+	for my $code (@{$tests{test_code}}){
+		print $tfh $code."\n\n";
+	}
+
+	close($tfh);
 }
