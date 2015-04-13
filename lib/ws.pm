@@ -15,7 +15,6 @@ use Dancer2::Plugin::Emailesque;
 use Dancer2::Plugin::Database;
 our $VERSION = '0.1';
 
-#my $request_limit = 1000;
 my %routemap = ();
 my %indexmap = ();
 
@@ -60,7 +59,7 @@ post '/sign_in' => sub {
   my %input_params = params;
   my $user_email = $input_params{email};
 
-  #if (!$input_params{'g-recaptcha-response'} eq ''){
+  if (!$input_params{'g-recaptcha-response'} eq ''){
     if (has_user($user_email) == 0){
       add_user($user_email);
       redirect '/';
@@ -68,9 +67,42 @@ post '/sign_in' => sub {
     else{
       redirect '/register';
     }
-  #}
+  }
 
   redirect '/register';
+};
+
+get '/userinfo' => sub {
+  my %input_params = params;
+  $input_params{history} = 0 if(!$input_params{history});
+  my %user_hash = ();
+
+  if($input_params{api_token}){
+    $user_hash{coins} = get_user_coins($input_params{api_token});
+    if($input_params{history}==1){
+      $user_hash{history} = get_user_history($input_params{api_token});
+    }
+  }
+
+  template 'user' => {
+    user_hash => \%user_hash
+  };
+};
+
+post '/userinfo' => sub {
+  my %input_params = params;
+  $input_params{history} = 0 if(!$input_params{history});
+  my %user_hash = ();
+
+  if(%input_params){
+    $user_hash{coins} = get_user_coins($input_params{api_token});
+    if($input_params{history}==1){
+      $user_hash{history} = get_user_history($input_params{api_token});
+    }
+  }
+
+  return to_json(\%user_hash);
+
 };
 
 any ['get', 'post'] => '/*' => sub {
@@ -81,7 +113,7 @@ any ['get', 'post'] => '/*' => sub {
   my $val = $routemap{$path}{param_function}->(\%input_params);
   if ($val==1){
     my $cost = $routemap{$path}{cost_function}->(\%input_params);
-    if(do_request($input_params{api_token}, $cost) == 1){
+    if(do_request($input_params{api_token}, $cost, $path) == 1){
       $result = $routemap{$path}{main_function}->(\%input_params);
     }
   }
@@ -93,7 +125,7 @@ true;
 # AUXILIAR FUNCTIONS
 
 sub do_request{
-  my ($api_token, $cost) = @_;
+  my ($api_token, $cost, $path) = @_;
   my $encryptoken = sha256_hex($api_token);
 
   my $row = database->quick_select('api_users', { api_token => $encryptoken });
@@ -103,7 +135,9 @@ sub do_request{
 
   if($request_limit-($old_requests+$cost) >= 0){
     my $new_requests = $old_requests + $cost;
+    my $localtime = localtime();
     database->quick_update('api_users', { email => $row->{email} }, { requests => $new_requests });
+    database->quick_insert('api_history', { api_token => $encryptoken, request => $path, cost => $cost, date => $localtime });
     return 1;
   }
   else{ return 0; }
@@ -136,4 +170,20 @@ sub send_email_to_user{
         message => "Your token is: $token .\nYou initially have 1000 request coins a day in our platform where different functionalities have different cost.\nEnjoy!\nBest regards, SplineAPI owners." };
 
   return 1;
+}
+
+sub get_user_coins{
+  my ($api_token) = @_;
+  my $encryptoken = sha256_hex($api_token);
+
+  my $row = database->quick_select('api_users', { api_token => $encryptoken });
+  return ($row->{request_limit}-$row->{requests});
+}
+
+sub get_user_history{
+  my ($api_token) = @_;
+  my $encryptoken = sha256_hex($api_token);
+
+  my @rows = database->quick_select('api_history', { api_token => $encryptoken }, {columns => [qw(request cost date)]});
+  return \@rows;
 }
