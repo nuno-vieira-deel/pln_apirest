@@ -1,0 +1,45 @@
+<nav class="breadcrumbs">
+	<div class="container">
+		<ul>
+			<li><a href="/">SplineAPI</a></li>
+			<li><a href="/register" class="active">Register</a></li>
+			<li><a href="/userinfo" class="active">User Info</a></li>
+		</ul>
+	</div>
+</nav>
+<main class="container" style="text-align:center">
+	<h2>User Information Form</h2>
+	<form action="/userinfo" id="userForm" method="get">
+		<input type="hidden" name="history" value="1"/>
+		<label for="api_token"></label>
+		<input type="text" name="api_token" required/>
+		<input type="submit" value="Submit"/>
+	</form>
+	[% IF user_hash.coins %]
+		<div id="user_coins">
+			<h1>Coins:</h1>
+			<p>[% user_hash.coins %]</p>
+		</div>
+		<div id="user_history">
+			<h1>History:</h1>
+			<table>
+					<thead>
+						<tr>
+							<th>Request</th>
+							<th>Cost</th>
+							<th>Date</th>
+						</tr>
+					</thead>
+					<tbody>
+						[% FOREACH elem IN user_hash.history %]
+						<tr>
+							<td>[% elem.request %]</td>
+							<td>[% elem.cost %]</td>
+							<td>[% elem.date %]</td>
+						</tr>
+						[% END %]
+					</tbody>
+				</table>
+		</div>
+	[% END %]
+</main>

@@ -45,4 +45,4 @@ plugins:
     dbi_params:
         RaiseError: 1
         AutoCommit: 1
-    on_connect_do: ["CREATE TABLE IF NOT EXISTS api_users (api_token VARCHAR(100) UNIQUE, email VARCHAR(100) UNIQUE, requests INTEGER, request_limit INTEGER DEFAULT 1000);", "INSERT OR REPLACE INTO api_users VALUES ('b57fc7d6e6034c8a3c7d5ffa7cb54d40fd276db3b2b92852f50a6d6fea4d8a93', 'splineapi@gmail.com', 0, 1000);"]
+    on_connect_do: ["CREATE TABLE IF NOT EXISTS api_users (api_token VARCHAR(100) UNIQUE, email VARCHAR(100) UNIQUE, requests INTEGER DEFAULT 0, request_limit INTEGER DEFAULT 1000);","INSERT OR IGNORE INTO api_users(api_token,email) VALUES ('b57fc7d6e6034c8a3c7d5ffa7cb54d40fd276db3b2b92852f50a6d6fea4d8a93', 'splineapi@gmail.com');", "CREATE TABLE IF NOT EXISTS api_history (api_token VARCHAR(100), request VARCHAR(50), cost INTEGER, date VARCHAR(50));"]
