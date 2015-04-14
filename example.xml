@@ -1,51 +1,43 @@
 <service>
-	<tool>Tool</tool>
-	<name>Tokenizer2</name>
-	<packages>
-		<package>FL3 'pt'</package>
-		<package>Lingua::FreeLing3::Sentence</package>
-		<package>Lingua::FreeLing3::Utils qw/word_analysis/</package>
-	</packages>
-	<info>
-		<hash_token>tokenizer2</hash_token>
+	<meta>
+		<tool>Tool</tool>
+		<name>Tokenizer2</name>
+		<route>tokenizer2</route>
 		<parameters>
-			<parameter required="1">
-				<param_name>text</param_name>
-				<param_description>The text to be tokenized</param_description>
+			<parameter required="1" name="text">
+				<description>The text to be tokenized</description>
 			</parameter>
-			<parameter required="0">
-				<param_name>outro</param_name>
-				<param_description>Other argument</param_description>
-				<param_default>default value</param_default>
+			<parameter required="0" name="outro">
+				<description>Other argument</description>
+				<default>default value</default>
 			</parameter>
 		</parameters>
-		<subtitle>Subtitulo de tokenizer2</subtitle>
-		<description>Descricao de tokenizer2</description>
-		<example>
-			<input>O input.</input>
-			<output>["O","input","."]</output>
-		</example>
+		<definition>Process of breaking a stream of text up into tokens.</definition>
 		<cost>1</cost>
-		<text_costs>
-			<text_cost length="10" cost="1"/>
-			<text_cost length="1000" cost="2"/>
-		</text_costs>
-	</info>
-	<code>
-	my $pt_tok = Lingua::FreeLing3::Tokenizer->new("pt");
-  	my $tokens = $pt_tok->tokenize($text, to_text => 1);
-  	return $tokens;
-  	</code>
+	</meta>
+	<implementation>
+		<packages>
+			<package>FL3 'pt'</package>
+			<package>Lingua::FreeLing3::Sentence</package>
+			<package>Lingua::FreeLing3::Utils qw/word_analysis/</package>
+		</packages>
+		<main lang="perl">
+			my $pt_tok = Lingua::FreeLing3::Tokenizer->new("pt");
+		  	my $tokens = $pt_tok->tokenize($text, to_text => 1);
+		  	return $tokens;
+	  	</main>
+	</implementation>
 	<tests>
 		<test>
-			<test_param param_name="text">
-				Eu sou o Nuno.
-			</test_param>
-			<test_code>my @final = ('Eu', 'sou', 'o', 'Nuno', '.'); 
-ok($result->[0] eq $final[0], "Simple input-output test");</test_code>
-			<test_code>
-				ok((scalar @{$result}) == (scalar @final), "Test the result length");
-			</test_code>
+			<param name="text">
+				I will be tokenized.
+			</param>
+			<code>
+				ok($result->[0] eq 'I', "Test the first word");
+			</code>
+			<code>
+				ok((scalar @{$result}) == 5, "Test the result length");
+			</code>
 		</test>
 	</tests>
 </service>
