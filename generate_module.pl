@@ -54,29 +54,29 @@ my %handler=(
 			 		if($flag){
 			 			switch($flag){
 			 				case "-h" { print "HELP!\n"; exit(0);}
-			 				case "-d" { print "\n";}
+			 				case "-d" { print "REMOVING IF EXIST!\n";}
 			 			}
 			 		}
 			 		my %param = ();
     			push @{$hash_info{parameters}}, \%param;
 			 	},
 	 	'-end'	=> sub{ 
-	 									#system("sh module_installer.sh");
 	 									close($fh);
 	 									system("cd modules/intermediate/Spline-$tool; cpanm -S -v .");
 	 									system("cd modules/Spline-$tool-$service; cpanm -S -v .");
 	 								},
-    'code' => sub{ 
+    'cost' => sub{ $hash_info{cost} = int($c); },
+    'definition' => sub{ $hash_info{description} = $c; },
+    'example' => sub{""},
+    'route' => sub{ $hash_info{hash_token} = $c; },
+    'implementation' => sub{""},
+    'input' => sub{ $hash_info{input} = $c; },
+    'main' => sub{ 
     								print $fh create_hash_info(%hash_info); 
     								print $fh create_default_functions();
-    								print $fh create_main_function($c);
+    								print $fh create_main_function($c, $v{lang});
     						},
-    'cost' => sub{ $hash_info{cost} = int($c); },
-    'description' => sub{ $hash_info{description} = $c; },
-    'example' => sub{""},
-    'hash_token' => sub{ $hash_info{hash_token} = $c; },
-    'info' => sub{""},
-    'input' => sub{ $hash_info{input} = $c; },
+    'meta' => sub{""},
     'name' => sub{ 
 		     				$service = ucfirst($c);
 		     				my @modules = `ls modules`;
@@ -96,10 +96,10 @@ my %handler=(
     'output' => sub{ $hash_info{output} = $c; },
     'package' => sub{ print $fh "use $c;\n"; },
     'packages' => sub{""},
-    'param_default' => sub{ $hash_info{parameters}->[(scalar @{$hash_info{parameters}})-1]{default} = $c; },
-    'param_description' => sub{ $hash_info{parameters}->[(scalar @{$hash_info{parameters}})-1]{description} = $c; },
-    'param_name' => sub{ $hash_info{parameters}->[(scalar @{$hash_info{parameters}})-1]{name} = $c; },
+    'default' => sub{ $hash_info{parameters}->[(scalar @{$hash_info{parameters}})-1]{default} = $c; },
+    'description' => sub{ $hash_info{parameters}->[(scalar @{$hash_info{parameters}})-1]{description} = $c; },
     'parameter' => sub{ 
+    								$hash_info{parameters}->[(scalar @{$hash_info{parameters}})-1]{name} = $v{name};
     								$hash_info{parameters}->[(scalar @{$hash_info{parameters}})-1]{required} = $v{required};
     								my %param = ();
     								push @{$hash_info{parameters}}, \%param;
@@ -113,11 +113,11 @@ my %handler=(
 		    			$aux_test = 0;
 		    			$test_number++;
 		    		},
-    'test_code' => sub {
+    'code' => sub {
 							push @{$tests{test_code}}, trim($c);
 							$aux_test++;
 						},
-    'test_param' => sub { $tests{test_param}{$v{param_name}} = trim($c); },
+    'param' => sub { $tests{test_param}{$v{name}} = trim($c); },
     'tests' => sub {""},
     'text_cost' => sub{ 
      									my %pair = ();
@@ -182,7 +182,7 @@ sub create_hash_info{
 	  $r .= "\t},\n";
 	}
 	  $r .= "\tcost => $cost,\n";
-	if ((scalar @{$text_costs}) > 0){
+	if ($text_costs and (scalar @{$text_costs}) > 0){
 		$r .= "\ttext_cost => {\n";
 		for( my $i = 0 ; $i < scalar @{$text_costs} ; $i++){
 			my $aux_len = $text_costs->[$i]{length};
@@ -208,7 +208,7 @@ sub create_default_functions{
 }
 
 sub create_main_function{
-	my ($code) = @_;
+	my ($code, $lang) = @_;
 	my $parameters = $hash_info{parameters};
 	my $result = "sub _".lc($tool)."_".lc($service)."{\n";
 	$result .= "\tmy (\$input_params) = \@_;\n";
@@ -248,7 +248,7 @@ sub create_tests{
 	print $tfh "my \$port = \$ENV{SPLINE_PORT} || 8080;\n\n";
 
 	print $tfh "my \%params = ();\n";
-	print $tfh "\$params{api_token} = 'KajMZtKtTt';\n";
+	print $tfh "\$params{api_token} = 'MAIlGopQUt';\n";
 
 	for my $param (keys %{$tests{test_param}}){
 		print $tfh "\$params{$param} = '".$tests{test_param}{$param}."';\n";

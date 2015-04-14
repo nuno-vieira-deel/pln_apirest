@@ -26,17 +26,8 @@ my %index_info = (
 			default => 'default value',
 		},
 	},
-	subtitle => 'Subtitulo de tokenizer2',
-	description => 'Descricao de tokenizer2',
-	example => {
-		input => 'O input.',
-		output => '["O","input","."]',
-	},
+	description => 'Process of breaking a stream of text up into tokens.',
 	cost => 1,
-	text_cost => {
-		10 => 1,
-		1000 => 2,
-	},
 );
 
 sub get_token {
@@ -89,10 +80,10 @@ sub _tool_tokenizer2{
 	my $outro = $input_params->{outro};
 
 
-	my $pt_tok = Lingua::FreeLing3::Tokenizer->new("pt");
-  	my $tokens = $pt_tok->tokenize($text, to_text => 1);
-  	return $tokens;
-  	
+			my $pt_tok = Lingua::FreeLing3::Tokenizer->new("pt");
+		  	my $tokens = $pt_tok->tokenize($text, to_text => 1);
+		  	return $tokens;
+	  	
 }
 
 1;
