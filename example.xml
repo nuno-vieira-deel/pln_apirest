@@ -1,43 +1,28 @@
 <service>
-	<meta>
-		<tool>Tool</tool>
-		<name>Tokenizer2</name>
-		<route>tokenizer2</route>
+	<meta batch="true">
+		<tool>NATools</tool>
+		<name>NATCreate</name>
+		<route>nat-create</route>
 		<parameters>
-			<parameter required="1" name="text">
-				<description>The text to be tokenized</description>
-			</parameter>
-			<parameter required="0" name="outro">
-				<description>Other argument</description>
-				<default>default value</default>
+			<parameter required="true" name="file">
+				<description>The file to be treated</description>
 			</parameter>
 		</parameters>
-		<definition>Process of breaking a stream of text up into tokens.</definition>
-		<cost>1</cost>
+		<definition>Descricao.</definition>
+		<cost>20</cost>
 	</meta>
 	<implementation>
 		<packages>
-			<package>FL3 'pt'</package>
-			<package>Lingua::FreeLing3::Sentence</package>
-			<package>Lingua::FreeLing3::Utils qw/word_analysis/</package>
+			<package>Lingua::NATools</package>
 		</packages>
-		<main lang="perl">
-			my $pt_tok = Lingua::FreeLing3::Tokenizer->new("pt");
-		  	my $tokens = $pt_tok->tokenize($text, to_text => 1);
-		  	return $tokens;
-	  	</main>
+		<main lang="perl">system("nat-create -tokenize -id=public/data/results/1111 -tmx $file");
+			open(my $fh, ">", "$json");
+				my %status = ();
+				$status{status} = 'done';
+				my @array = ("data/results/1111/target-source.dmp", "data/results/1111/target-target.dmp");
+				$status{ans} = \@array;
+				print $fh encode_json(\%status);
+			close($fh);
+  	</main>
 	</implementation>
-	<tests>
-		<test>
-			<param name="text">
-				I will be tokenized.
-			</param>
-			<code>
-				ok($result->[0] eq 'I', "Test the first word");
-			</code>
-			<code>
-				ok((scalar @{$result}) == 5, "Test the result length");
-			</code>
-		</test>
-	</tests>
 </service>

@@ -11,12 +11,12 @@ my $host = $ENV{SPLINE_HOST} || 'localhost';
 my $port = $ENV{SPLINE_PORT} || 8080;
 
 my %params = ();
-$params{api_token} = 'KajMZtKtTt';
-$params{text} = 'Eu sou o Nuno.';
+$params{api_token} = 'MAIlGopQUt';
+$params{text} = 'I will be tokenized.';
 
-my $got2 = HTTP::Tiny->new->post_form("http://".$host.":".$port."/tokenizer", \%params);
-my $got = decode_json($got2->{content});
-my @res = ('Eu', 'sou', 'o', 'Nuno', '.');
+my $got = HTTP::Tiny->new->post_form("http://".$host.":".$port."/tokenizer", \%params);
+my $result = decode_json($got->{content});
 
-ok($got->[0] eq $res[0], "Simple input-output test");
-ok((scalar @{$got}) == (scalar @res), "Test the result length");
+ok($result->[0] eq 'I', "Test the first word");
+
+ok((scalar @{$result}) == 5, "Test the result length");

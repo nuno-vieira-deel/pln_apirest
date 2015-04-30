@@ -1,1 +1,8 @@
 spline.sqlite
+daemon.log
+daemon.pid
+data/files/*
+data/logs/*
+data/queue/*
+public/data/json/*
+public/data/results/*
