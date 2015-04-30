@@ -55,6 +55,7 @@
                                 </xs:complexType>
                             </xs:element>
                         </xs:sequence>
+                        <xs:attribute name="batch" type="xs:boolean" use="optional"/>
                     </xs:complexType>
                 </xs:element>
                 <xs:element name="implementation">

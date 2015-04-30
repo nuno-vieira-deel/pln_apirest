@@ -9,6 +9,7 @@ use experimental 'smartmatch';
 use Switch;
 use Scalar::Util qw(looks_like_number);
 use String::Util qw(trim);
+use Capture::Tiny ':all';
 
 my $filename = shift;
 my $flag = shift;
@@ -32,6 +33,8 @@ my %tests = ();
 my $aux_test = 0;
 my $test_number = 1;
 my $last_param = 0;
+my $method = 0;
+my $packages = "";
 
 $hash_info{hash_token} = "";
 $hash_info{subtitle} = "";
@@ -62,8 +65,8 @@ my %handler=(
 			 	},
 	 	'-end'	=> sub{ 
 	 									close($fh);
-	 									system("cd modules/intermediate/Spline-$tool; cpanm -S -v .");
-	 									system("cd modules/Spline-$tool-$service; cpanm -S -v .");
+ 										system("cd modules/intermediate/Spline-$tool; cpanm -S -v .");
+ 										system("cd modules/Spline-$tool-$service; cpanm -S -v .");
 	 								},
     'cost' => sub{ $hash_info{cost} = int($c); },
     'definition' => sub{ $hash_info{description} = $c; },
@@ -74,15 +77,21 @@ my %handler=(
     'main' => sub{ 
     								print $fh create_hash_info(%hash_info); 
     								print $fh create_default_functions();
-    								print $fh create_main_function($c, $v{lang});
+    								print $fh create_main_function($c, $v{lang}, $method);
     						},
-    'meta' => sub{""},
+    'meta' => sub{
+    				if($v{batch}){
+    					$v{batch} = 0 if $v{batch} eq 'false';
+    					$v{batch} = 1 if $v{batch} eq 'true';
+    					$method = $v{batch};
+    				}
+    	},
     'name' => sub{ 
 		     				$service = ucfirst($c);
 		     				my @modules = `ls modules`;
 		     				if (!("Spline-$tool-$service\n" ~~ @modules)){
-		     					system("cd modules; h2xs -XAn Spline::$tool::$service; chmod 777 Spline-$tool-$service");
-		     					system("cp modules/intermediate/Spline-Services/.gitignore modules/Spline-$tool-$service/");
+	     						system("cd modules; h2xs -XAn Spline::$tool::$service; chmod 777 Spline-$tool-$service");
+	     						system("cp modules/intermediate/Spline-Services/.gitignore modules/Spline-$tool-$service/");
 		     					open($fh, '>', "modules/Spline-$tool-$service/lib/Spline/$tool/$service.pm"); 
 		     					print $fh "package Spline::$tool::$service;\n\n";
 		     					print $fh "use 5.018002;\nuse strict;\nuse warnings;\nuse JSON;\n\n";
@@ -94,12 +103,17 @@ my %handler=(
 		     				}
 		     			}, 
     'output' => sub{ $hash_info{output} = $c; },
-    'package' => sub{ print $fh "use $c;\n"; },
+    'package' => sub{ 
+    				if($method == 0){ print $fh "use $c;\n"; }
+    				else{ $packages .= "load '$c'; "; }
+    			},
     'packages' => sub{""},
     'default' => sub{ $hash_info{parameters}->[(scalar @{$hash_info{parameters}})-1]{default} = $c; },
     'description' => sub{ $hash_info{parameters}->[(scalar @{$hash_info{parameters}})-1]{description} = $c; },
     'parameter' => sub{ 
     								$hash_info{parameters}->[(scalar @{$hash_info{parameters}})-1]{name} = $v{name};
+    								$v{required} = 1 if $v{required} eq 'true';
+    								$v{required} = 0 if $v{required} eq 'false';
     								$hash_info{parameters}->[(scalar @{$hash_info{parameters}})-1]{required} = $v{required};
     								my %param = ();
     								push @{$hash_info{parameters}}, \%param;
@@ -130,12 +144,13 @@ my %handler=(
 		     				$tool = ucfirst($c);
 		     				my @intermediates = `ls modules/intermediate`;
 		     				if (!("Spline-$tool\n" ~~ @intermediates)){
-		     					system("cd modules/intermediate; h2xs -XAn Spline::$tool");
-		     					system("cp modules/intermediate/Spline-Services/.gitignore modules/intermediate/Spline-$tool/");
+	     						system("cd modules/intermediate; h2xs -XAn Spline::$tool");
+	     						system("cp modules/intermediate/Spline-Services/.gitignore modules/intermediate/Spline-$tool/");
 		     				} 
      					},
 );
 dt($filename, %handler);
+
 
 
 sub create_hash_info{
@@ -208,9 +223,11 @@ sub create_default_functions{
 }
 
 sub create_main_function{
-	my ($code, $lang) = @_;
+	my ($code, $lang, $method) = @_;
 	my $parameters = $hash_info{parameters};
-	my $result = "sub _".lc($tool)."_".lc($service)."{\n";
+	my $result = "";
+
+	$result = "sub _".lc($tool)."_".lc($service)."{\n";
 	$result .= "\tmy (\$input_params) = \@_;\n";
 	for( my $i = 0 ; $i < scalar @{$parameters} ; $i++){
   	if (defined $parameters->[$i]{name}){
@@ -221,7 +238,43 @@ sub create_main_function{
   	}
   }
   $result .= "\n";
-	$result .= $code;
+  if($method == 0){
+		$result .= $code;
+	}
+	else{
+		$result .= "\tmy \$now = time();\n";
+		$result .= "\tmy \$ans_json = \"data/json/\".\$now.\".json\";\n";
+		$result .= "\tmy \$json = \"public/\".\$ans_json;\n";
+
+		$result .= "\tmy \%status = ();\n";
+		$result .= "\t\$status{status} = 'processing';\n";
+		$result .= "\t\$status{answer} = \$ans_json;\n\n";
+
+		$result .= "\topen (my \$jfh, \">\", \$json) or die \"cannot open file: \$!\";\n";
+			$result .= "\t\tprint \$jfh \"{\\\"status\\\":\\\"processing\\\"}\";\n";
+		$result .= "\tclose(\$jfh);\n\n";
+
+		$code =~ s/\\/\\\\/g;
+		$code =~ s/\$/\\\$/g;
+		$code =~ s/\@/\\\@/g;
+		$code =~ s/\%/\\\%/g;
+		$code =~ s/\"/\\\"/g;
+		$code =~ s/\\\$json/\$json/g; 
+		for( my $i = 0 ; $i < scalar @{$parameters} ; $i++){
+			if (defined $parameters->[$i]{name}){
+				my $aux_name = $parameters->[$i]{name};
+				$code =~ s/\\\$$aux_name/\$$aux_name/g;
+			}
+		}
+
+		$result .= "\topen (my \$dfh, \">\", \"data/queue/\".\$now) or die \"cannot open file: \$!\";\n";
+			$result .= "\tprint \$dfh \"$packages\";\n";
+			$result .= "\tprint \$dfh \"\\n\";\n";
+			$result .= "\tprint \$dfh \"$code\";\n";
+		$result .= "\tclose(\$dfh);\n\n";
+
+		$result .= "\treturn \\\%status;\n";
+	}
 	$result .= "\n}\n\n1;\n__END__";
 
 	return $result;
