@@ -101,3 +101,23 @@ sub _natools_natcreate{
 
 1;
 __END__
+
+=head1 MODULE
+
+Spline::NATools::NATCreate - a module to create X and Y
+
+=head1 SYNOPSIS
+
+system("nat-create -tokenize -id=public/data/results/1111 -tmx $file");
+
+=head1 DESCRIPTION
+
+Fazer isto, aquilo e aqueloutro
+
+=head1 AUTHOR
+
+Eu
+
+=head1 SEE ALSO
+
+NATools, Outros

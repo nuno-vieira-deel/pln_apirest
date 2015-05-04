@@ -30,7 +30,9 @@ my $service;
 my $fh;
 my %hash_info = ();
 my %tests = ();
+my %documentation = ();
 my $aux_test = 0;
+my $aux_doc = 0;
 my $test_number = 1;
 my $last_param = 0;
 my $method = 0;
@@ -64,6 +66,7 @@ my %handler=(
     			push @{$hash_info{parameters}}, \%param;
 			 	},
 	 	'-end'	=> sub{ 
+	 									print $fh create_documentation();
 	 									close($fh);
  										system("cd modules/intermediate/Spline-$tool; cpanm -S -v .");
  										system("cd modules/Spline-$tool-$service; cpanm -S -v .");
@@ -148,6 +151,12 @@ my %handler=(
 	     						system("cp modules/intermediate/Spline-Services/.gitignore modules/intermediate/Spline-$tool/");
 		     				} 
      					},
+    'documentation' => sub{""},
+    'header' => sub{ 
+    								$documentation{$aux_doc}{title} = uc($v{title}); 
+    								$documentation{$aux_doc}{content} = $c;
+    								$aux_doc++; 
+    						},
 );
 dt($filename, %handler);
 
@@ -315,4 +324,12 @@ sub create_tests{
 	}
 
 	close($tfh);
+}
+
+sub create_documentation{
+	my $result = "";
+	for my $num (sort keys %documentation){
+		$result .= "\n\n=head1 ".$documentation{$num}{title}."\n\n".$documentation{$num}{content};
+	}
+	return $result;
 }
