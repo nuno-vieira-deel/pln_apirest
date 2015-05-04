@@ -26,10 +26,10 @@
   	</main>
 	</implementation>
 	<documentation>
-		<header title="module">Spline::NATools::NATCreate - a module to create X and Y</header>
-		<header title="synopsis">system("nat-create -tokenize -id=public/data/results/1111 -tmx $file");</header>
-		<header title="description">Fazer isto, aquilo e aqueloutro</header>
-		<header title="author">Eu</header>
-		<header title="see also">NATools, Outros</header>
+		<header title="module">Spline::NATools::NATCreate - a module to create ...</header>
+		<header title="synopsis">NATCreate synopsis</header>
+		<header title="description">NATCreate description</header>
+		<header title="author">NATCreate Author</header>
+		<header title="see also">Other modules</header>
 	</documentation>
 </service>

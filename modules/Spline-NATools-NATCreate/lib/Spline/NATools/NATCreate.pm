@@ -104,20 +104,20 @@ __END__
 
 =head1 MODULE
 
-Spline::NATools::NATCreate - a module to create X and Y
+Spline::NATools::NATCreate - a module to create ...
 
 =head1 SYNOPSIS
 
-system("nat-create -tokenize -id=public/data/results/1111 -tmx $file");
+NATCreate synopsis
 
 =head1 DESCRIPTION
 
-Fazer isto, aquilo e aqueloutro
+NATCreate description
 
 =head1 AUTHOR
 
-Eu
+NATCreate Author
 
 =head1 SEE ALSO
 
-NATools, Outros
+Other modules
