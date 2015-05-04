@@ -25,4 +25,11 @@
 			close($fh);
   	</main>
 	</implementation>
+	<documentation>
+		<header title="module">Spline::NATools::NATCreate - a module to create ...</header>
+		<header title="synopsis">NATCreate synopsis</header>
+		<header title="description">NATCreate description</header>
+		<header title="author">NATCreate Author</header>
+		<header title="see also">Other modules</header>
+	</documentation>
 </service>

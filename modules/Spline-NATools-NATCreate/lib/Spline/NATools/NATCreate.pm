@@ -101,3 +101,23 @@ sub _natools_natcreate{
 
 1;
 __END__
+
+=head1 MODULE
+
+Spline::NATools::NATCreate - a module to create ...
+
+=head1 SYNOPSIS
+
+NATCreate synopsis
+
+=head1 DESCRIPTION
+
+NATCreate description
+
+=head1 AUTHOR
+
+NATCreate Author
+
+=head1 SEE ALSO
+
+Other modules
