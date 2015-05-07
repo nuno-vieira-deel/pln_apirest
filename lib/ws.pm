@@ -60,13 +60,8 @@ post '/sign_in' => sub {
   my $user_email = $input_params{email};
 
   if (!$input_params{'g-recaptcha-response'} eq ''){
-    if (has_user($user_email) == 0){
-      add_user($user_email);
-      redirect '/';
-    }
-    else{
-      redirect '/register';
-    }
+    add_user($user_email, has_user($user_email));
+    redirect '/';
   }
 
   redirect '/register';
@@ -159,24 +154,40 @@ sub has_user{
 }
 
 sub add_user{
-  my $user_email = shift;
+  my ($user_email, $has_user) = @_;
   my @chars = ("A".."Z", "a".."z");
   my $string;
   my $random_token = "";
   $random_token .= $chars[rand @chars] for 1..10;
   my $token_final = sha256_hex($random_token);
 
-  database->quick_insert('api_users', { api_token => $token_final, email => $user_email, requests => 0 });
-
-  send_email_to_user($user_email, $random_token);
+  if($has_user==0){
+    database->quick_insert('api_users', { api_token => $token_final, email => $user_email, requests => 0 });
+    send_email_to_add_user($user_email, $random_token);
+  }
+  if($has_user==1){
+    database->quick_update('api_users', { email => $user_email }, { api_token => $token_final });
+    my $row = database->quick_select('api_users', { email => $user_email });
+    send_email_to_change_user($user_email, $random_token, $row->{request_limit}-$row->{requests});
+  }
 }
 
-sub send_email_to_user{
+sub send_email_to_add_user{
   my ($user_email, $token) = @_;
 
   email { to => "$user_email",
         subject => "Here is your token",
         message => "Your token is: $token .\nYou initially have 1000 request coins a day in our platform where different functionalities have different cost.\nEnjoy!\nBest regards, SplineAPI owners." };
+
+  return 1;
+}
+
+sub send_email_to_change_user{
+  my ($user_email, $token, $requests) = @_;
+
+  email { to => "$user_email",
+        subject => "Here is your new token",
+        message => "Your new token is: $token .\nYou still have $requests request coins today in our platform where different functionalities have different cost.\nBest regards, SplineAPI owners." };
 
   return 1;
 }
