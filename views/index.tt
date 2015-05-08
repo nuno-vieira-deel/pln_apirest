@@ -54,6 +54,7 @@
 				</table>
 				<p class="subtitle">Cost:</p>
 				<p class="code">[% tools.$elem.cost %]</p>
+				[% IF tools.$elem.text_cost %]
 				<p class="subtitle">Cost per Text Length:</p>
 				<table>
 					<thead>
@@ -73,12 +74,15 @@
 						[% END %]
 					</tbody>
 				</table>
-				<p class="subtitle">Example</p>
-				<!-- <p class="code">some code with <span class="variable">variables</span></p> -->
-				<p class="subtitle">Input:</p>
-				<p class="code">[% tools.$elem.example.input %]</p>
-				<p class="subtitle">Output:</p>
-				<p class="code">[% tools.$elem.example.output %]</p>
+				[% END %]
+				[% IF tools.$elem.example AND tools.$elem.example.input %]
+					<p class="subtitle">Example</p>
+					<!-- <p class="code">some code with <span class="variable">variables</span></p> -->
+					<p class="subtitle">Input:</p>
+					<p class="code">[% tools.$elem.example.input %]</p>
+					<p class="subtitle">Output:</p>
+					<p class="code">[% tools.$elem.example.output %]</p>
+				[% END %]
 
 			</div>
 		[% END %]
@@ -86,14 +90,16 @@
 		<div class="content">
 			<a name="demo"></a>
 			<h1 class="title">DEMO</h1>
-			<p class="description">Simple Demo to test the PLN tools.</p>
-			<form id="demoForm">
+			<p class="description">Simple Demo to test some of the PLN tools available.</p>
+			<form id="demoForm" method="post">
 				<p class="subtitle">Input:</p>
 				<input type="text" name="input_text" id="input_text" class="code"/>
 				<p class="subtitle">Parameter:</p>
 				<select name="pln_token" id="pln_token">
 					[% FOREACH elem IN tools.keys.sort %]
-						<option value="[% elem %]">[% elem %]</option>
+						[% IF tools.$elem.parameters.word OR tools.$elem.parameters.text %]
+							<option value="[% elem %]">[% elem %]</option>
+						[% END %]
 					[% END %]
 				</select>
 				<p class="subtitle">API Token:</p>
