@@ -93,7 +93,7 @@ my %handler=(
 		     				$service = ucfirst($c);
 		     				my @modules = `ls modules`;
 		     				if (!("Spline-$tool-$service\n" ~~ @modules)){
-	     						system("cd modules; h2xs -XAn Spline::$tool::$service; chmod 777 Spline-$tool-$service");
+	     						system("cd modules; h2xs -XAn Spline::$tool::$service; chmod -R 777 Spline-$tool-$service");
 	     						system("cp modules/intermediate/Spline-Services/.gitignore modules/Spline-$tool-$service/");
 		     					open($fh, '>', "modules/Spline-$tool-$service/lib/Spline/$tool/$service.pm"); 
 		     					print $fh "package Spline::$tool::$service;\n\n";
@@ -147,7 +147,7 @@ my %handler=(
 		     				$tool = ucfirst($c);
 		     				my @intermediates = `ls modules/intermediate`;
 		     				if (!("Spline-$tool\n" ~~ @intermediates)){
-	     						system("cd modules/intermediate; h2xs -XAn Spline::$tool");
+	     						system("cd modules/intermediate; h2xs -XAn Spline::$tool; chmod -R 777 Spline-$tool");
 	     						system("cp modules/intermediate/Spline-Services/.gitignore modules/intermediate/Spline-$tool/");
 		     				} 
      					},
@@ -159,7 +159,6 @@ my %handler=(
     						},
 );
 dt($filename, %handler);
-
 
 
 sub create_hash_info{

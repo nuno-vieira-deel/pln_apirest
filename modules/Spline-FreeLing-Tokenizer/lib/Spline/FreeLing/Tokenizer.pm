@@ -25,7 +25,7 @@ my %index_info = (
   },
   cost => 1,
   text_cost => {
-    10 => 1,
+    100 => 1,
     1000 => 2,
   },
 );
@@ -45,14 +45,11 @@ sub cost_function{
 
   for my $cost (keys %{$index_info{text_cost}}){
     if($text_length >= int($cost)){
-      $cost_result = int($index_info{text_cost}{$cost});
-    }
-    else{
-      last;
+      $cost_result = $index_info{text_cost}{$cost};
     }
   }
 
-  my $final_cost = $cost_result + int($index_info{cost});
+  my $final_cost = $cost_result + $index_info{cost};
   return $final_cost;
 }
 
