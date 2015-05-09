@@ -41,7 +41,7 @@ sub get_info {
 sub cost_function{
   my ($input_params) = @_;
   my $cost_result = 0;
-  my $text_length = length($input_params->{text});
+  my $text_length = length($input_params->{word});
 
   for my $cost (keys %{$index_info{text_cost}}){
     if($text_length >= int($cost)){
