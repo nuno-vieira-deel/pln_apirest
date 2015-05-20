@@ -310,6 +310,9 @@ sub create_main_function_bash{
   	$code =~ s/\;\n/\;/g;
   	$code =~ s/\n/\;/g;
 		$result .= "\tsystem(\"$code\");\n";
+		$result .= "\tmy \%status = ();\n";
+		$result .= "\t\$status{status} = 'done';\n";
+		$result .= "\treturn \\\%status;\n";
 	}
 	else{
 		$result .= "\tmy \$now = time();\n";

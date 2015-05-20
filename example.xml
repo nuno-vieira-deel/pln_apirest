@@ -1,8 +1,8 @@
 <service>
-	<meta batch="true">
-		<tool>NATools</tool>
-		<name>NATCreate</name>
-		<route>nat-create</route>
+	<meta batch="false">
+		<tool>Test</tool>
+		<name>NewTest</name>
+		<route>new-test</route>
 		<parameters>
 			<parameter required="true" name="file">
 				<description>The file to be treated</description>
@@ -15,14 +15,8 @@
 		<packages>
 			<package>Lingua::NATools</package>
 		</packages>
-		<main lang="perl">system("nat-create -tokenize -id=public/data/results/1111 -tmx $file");
-			open(my $fh, ">", "$json");
-				my %status = ();
-				$status{status} = 'done';
-				my @array = ("data/results/1111/target-source.dmp", "data/results/1111/target-target.dmp");
-				$status{ans} = \@array;
-				print $fh encode_json(\%status);
-			close($fh);
+		<main lang="bash">echo "ola\n"
+			echo "adeus\n"
   	</main>
 	</implementation>
 	<documentation>
