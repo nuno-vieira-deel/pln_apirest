@@ -1,0 +1,6 @@
+Changes
+Makefile.PL
+MANIFEST
+README
+t/Spline-Test.t
+lib/Spline/Test.pm
