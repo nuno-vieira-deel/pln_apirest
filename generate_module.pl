@@ -80,7 +80,8 @@ my %handler=(
     'main' => sub{ 
     								print $fh create_hash_info(%hash_info); 
     								print $fh create_default_functions();
-    								print $fh create_main_function($c, $v{lang}, $method);
+    								print $fh create_main_function_perl($c, $method) if($v{lang} eq 'perl');
+    								print $fh create_main_function_bash($c, $method) if($v{lang} eq 'bash');
     						},
     'meta' => sub{
     				if($v{batch}){
@@ -230,8 +231,8 @@ sub create_default_functions{
 	return $result;
 }
 
-sub create_main_function{
-	my ($code, $lang, $method) = @_;
+sub create_main_function_perl{
+	my ($code, $method) = @_;
 	my $parameters = $hash_info{parameters};
 	my $result = "";
 
@@ -279,6 +280,65 @@ sub create_main_function{
 			$result .= "\tprint \$dfh \"$packages\";\n";
 			$result .= "\tprint \$dfh \"\\n\";\n";
 			$result .= "\tprint \$dfh \"$code\";\n";
+		$result .= "\tclose(\$dfh);\n\n";
+
+		$result .= "\treturn \\\%status;\n";
+	}
+	$result .= "\n}\n\n1;\n__END__";
+
+	return $result;
+}
+
+sub create_main_function_bash{
+	my ($code, $method) = @_;
+	my $parameters = $hash_info{parameters};
+	my $result = "";
+
+	$result = "sub _".lc($tool)."_".lc($service)."{\n";
+	$result .= "\tmy (\$input_params) = \@_;\n";
+	for( my $i = 0 ; $i < scalar @{$parameters} ; $i++){
+  	if (defined $parameters->[$i]{name}){
+  		my $aux_name = $parameters->[$i]{name};
+  		my $aux_required = int($parameters->[$i]{required});
+  		$result .=  "\tmy \$$aux_name = \$input_params->{$aux_name};\n";
+  		$result .=  "\treturn unless \$$aux_name;\n" if($aux_required==1);
+  	}
+  }
+  $result .= "\n";
+  if($method == 0){
+  	$code =~ s/\"/\\\"/g;
+  	$code =~ s/\;\n/\;/g;
+  	$code =~ s/\n/\;/g;
+		$result .= "\tsystem(\"$code\");\n";
+	}
+	else{
+		$result .= "\tmy \$now = time();\n";
+		$result .= "\tmy \$ans_json = \"data/json/\".\$now.\".json\";\n";
+		$result .= "\tmy \$json = \"public/\".\$ans_json;\n";
+
+		$result .= "\tmy \%status = ();\n";
+		$result .= "\t\$status{status} = 'processing';\n";
+		$result .= "\t\$status{answer} = \$ans_json;\n\n";
+
+		$result .= "\topen (my \$jfh, \">\", \$json) or die \"cannot open file: \$!\";\n";
+			$result .= "\t\tprint \$jfh \"{\\\"status\\\":\\\"processing\\\"}\";\n";
+		$result .= "\tclose(\$jfh);\n\n";
+
+		$code =~ s/\\/\\\\/g;
+		$code =~ s/\$/\\\$/g;
+		$code =~ s/\@/\\\@/g;
+		$code =~ s/\%/\\\%/g;
+		$code =~ s/\"/\\\\\\\"/g;
+		$code =~ s/\\\$json/\$json/g; 
+		for( my $i = 0 ; $i < scalar @{$parameters} ; $i++){
+			if (defined $parameters->[$i]{name}){
+				my $aux_name = $parameters->[$i]{name};
+				$code =~ s/\\\$$aux_name/\$$aux_name/g;
+			}
+		}
+
+		$result .= "\topen (my \$dfh, \">\", \"data/queue/\".\$now) or die \"cannot open file: \$!\";\n";
+			$result .= "\tprint \$dfh \"system(\\\"$code\\\");\";\n";
 		$result .= "\tclose(\$dfh);\n\n";
 
 		$result .= "\treturn \\\%status;\n";
