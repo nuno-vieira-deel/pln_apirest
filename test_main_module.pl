@@ -2,10 +2,10 @@ use Spline::Services;
 use Data::Dumper;
 
 my %hash = ( 
-    text => 'Uma frase qualquer que funcione.',
-    api_token => 'KajMZtKtTt',
+    file => 'Uma frase qualquer que funcione.',
+    api_token => 'MAIlGopQUt',
  );
 
-my $result = fl3_analyzer(%hash);
+my $result = new_test(%hash); ##route
 
 print Dumper($result);

@@ -25,14 +25,9 @@ my %index_info = (
   },
   subtitle => 'Subtitulo de fl3_analyzer',
   description => 'Descricao de fl3_analyzer',
-  example => {
-    input => 'O input.',
-    output => '[{"lemma":"o","pos":"DA0MS0","word":"O"},{"lemma":"input","pos":"NCMS000","word":"input"},{"pos":"Fp","lemma":".","word":"."}]',
-  },
   cost => 2,
   text_cost => {
-    500 => 1,
-    1000 => 2,
+    text => [[500,1],[1000,2]],
   },
 );
 
@@ -47,11 +42,13 @@ sub get_info {
 sub cost_function{
   my ($input_params) = @_;
   my $cost_result = 0;
-  my $text_length = length($input_params->{text});
 
-  for my $cost (keys %{$index_info{text_cost}}){
-    if($text_length >= int($cost)){
-      $cost_result = $index_info{text_cost}{$cost};
+  for my $param (keys %{$index_info{text_cost}}){
+    my $text_length = length($input_params->{$param});
+    for my $pair (@{$index_info{text_cost}{$param}}){
+      if($text_length >= int($pair->[0])){
+        $cost_result += $pair->[1];
+      }
     }
   }
 
@@ -65,6 +62,9 @@ sub param_function {
   for my $param (keys %{$index_info{parameters}}){
     if ($index_info{parameters}{$param}{required} == 1){
       $flag = 0 if (!exists($input_params->{$param}));
+    }
+    if ($index_info{parameters}{$param}{default}){
+      $input_params->{$param} = $index_info{parameters}{$param}{default} if (!exists($input_params->{$param}));
     }
   }
   return $flag;

@@ -73,10 +73,8 @@ my %handler=(
 	 								},
     'cost' => sub{ $hash_info{cost} = int($c); },
     'definition' => sub{ $hash_info{description} = $c; },
-    'example' => sub{""},
     'route' => sub{ $hash_info{hash_token} = $c; },
     'implementation' => sub{""},
-    'input' => sub{ $hash_info{input} = $c; },
     'main' => sub{ 
     								print $fh create_hash_info(%hash_info); 
     								print $fh create_default_functions();
@@ -106,7 +104,6 @@ my %handler=(
 		     					exit(0);
 		     				}
 		     			}, 
-    'output' => sub{ $hash_info{output} = $c; },
     'package' => sub{ 
     				if($method == 0){ print $fh "use $c;\n"; }
     				else{ $packages .= "load '$c'; "; }
@@ -141,6 +138,7 @@ my %handler=(
      									my %pair = ();
      									$pair{cost} = $v{cost};
      									$pair{length} = $v{length};
+     									$pair{field} = $v{field};
      									push @{$hash_info{text_cost}}, \%pair;
      								}, # attributes: length, cost
     'text_costs' => sub{""},
@@ -199,19 +197,23 @@ sub create_hash_info{
 	  $r .= "\t},\n";
 	  $r .= "\tsubtitle => '$subtitle',\n" if(!($subtitle eq ""));
 	  $r .= "\tdescription => '$description',\n" if(!($description eq ""));
-	if(!($input eq "")){
-	  $r .= "\texample => {\n";
-	    $r .= "\t\tinput => '$input',\n";
-	    $r .= "\t\toutput => '$output',\n";
-	  $r .= "\t},\n";
-	}
 	  $r .= "\tcost => $cost,\n";
 	if ($text_costs and (scalar @{$text_costs}) > 0){
 		$r .= "\ttext_cost => {\n";
+		my %aux_costs = ();
 		for( my $i = 0 ; $i < scalar @{$text_costs} ; $i++){
 			my $aux_len = $text_costs->[$i]{length};
 			my $aux_cost = $text_costs->[$i]{cost};
-	    $r .= "\t\t$aux_len => $aux_cost,\n";
+			my $aux_field = $text_costs->[$i]{field};
+			push @{$aux_costs{$aux_field}}, $aux_len;
+			push @{$aux_costs{$aux_field}}, $aux_cost;
+		}
+		for my $aux_field (keys %aux_costs){
+			$r .= "\t\t$aux_field => [";
+			for(my $i=0; $aux_costs{$aux_field}->[$i]; $i=$i+2){
+				$r .= "[".$aux_costs{$aux_field}->[$i].",".$aux_costs{$aux_field}->[$i+1]."],";
+			}
+			$r .= "],\n";
 		}
 	  $r .= "\t},\n";
 	}

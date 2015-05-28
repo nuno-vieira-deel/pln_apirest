@@ -2,20 +2,29 @@
 	<meta batch="false">
 		<tool>Test</tool>
 		<name>NewTest</name>
-		<route>new-test</route>
+		<route>new_test</route>
 		<parameters>
 			<parameter required="true" name="file">
 				<description>The file to be treated</description>
 			</parameter>
+			<parameter required="false" name="ner">
+				<description>The NER.</description>
+				<default>1</default>
+			</parameter>
 		</parameters>
 		<definition>Descricao.</definition>
 		<cost>20</cost>
+		<text_costs>
+			<text_cost field="file" length="1000" cost="1"/>
+			<text_cost field="file" length="2000" cost="2"/>
+			<text_cost field="api_token" length="2000" cost="2"/>
+		</text_costs>
 	</meta>
 	<implementation>
 		<packages>
 			<package>Lingua::NATools</package>
 		</packages>
-		<main lang="bash">echo "ola\n"
+		<main lang="bash">echo "$ner\n"
 			echo "adeus\n"
   	</main>
 	</implementation>

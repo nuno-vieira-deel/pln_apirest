@@ -8,7 +8,7 @@ use JSON;
 use Lingua::NATools;
 
 my %index_info = (
-	hash_token => 'new-test',
+	hash_token => 'new_test',
 	parameters => {
 		api_token => {
 			description => 'The token to be identified',
@@ -18,9 +18,18 @@ my %index_info = (
 			description => 'The file to be treated',
 			required => 1,
 		},
+		ner => {
+			description => 'The NER.',
+			required => 0,
+			default => 1,
+		},
 	},
 	description => 'Descricao.',
 	cost => 20,
+	text_cost => {
+		api_token => [[2000,2],],
+		file => [[1000,1],[2000,2],],
+	},
 );
 
 sub get_token {
@@ -35,13 +44,12 @@ sub cost_function{
   my ($input_params) = @_;
   my $cost_result = 0;
 
-  my $text_length = 0;
-  $text_length = length($input_params->{word}) if(defined $input_params->{word});
-  $text_length = length($input_params->{text}) if(defined $input_params->{text});
-
-  for my $cost (keys %{$index_info{text_cost}}){
-    if($text_length >= int($cost)){
-      $cost_result = $index_info{text_cost}{$cost};
+  for my $param (keys %{$index_info{text_cost}}){
+    my $text_length = length($input_params->{$param});
+    for my $pair (@{$index_info{text_cost}{$param}}){
+      if($text_length >= int($pair->[0])){
+        $cost_result += $pair->[1];
+      }
     }
   }
 
@@ -55,6 +63,9 @@ sub param_function {
   for my $param (keys %{$index_info{parameters}}){
     if ($index_info{parameters}{$param}{required} == 1){
       $flag = 0 if (!exists($input_params->{$param}));
+    }
+    if ($index_info{parameters}{$param}{default}){
+      $input_params->{$param} = $index_info{parameters}{$param}{default} if (!exists($input_params->{$param}));
     }
   }
   return $flag;
@@ -70,10 +81,11 @@ sub _test_newtest{
 	my ($input_params) = @_;
 	my $file = $input_params->{file};
 	return unless $file;
+	my $ner = $input_params->{ner};
 
-	system("echo \"ola\n\";			echo \"adeus\n\";  	");
+	system("echo \"$ner\n\";			echo \"adeus\n\";  	");
 	my %status = ();
-	$status{status} = 'processing';
+	$status{status} = 'done';
 	return \%status;
 
 }
