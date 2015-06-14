@@ -4,6 +4,7 @@
 			<li><a href="/">SplineAPI</a></li>
 			<li><a href="/register" class="active">Register</a></li>
 			<li><a href="/userinfo" class="active">User Info</a></li>
+			<li><a href="/usage" class="active">How to use</a></li>
 		</ul>
 	</div>
 </nav>
@@ -11,7 +12,7 @@
 	<h2>User Information Form</h2>
 	<form action="/userinfo" id="userForm" method="get">
 		<input type="hidden" name="history" value="1"/>
-		<label for="api_token"></label>
+		<label for="api_token">Token: </label>
 		<input type="text" name="api_token" required/>
 		<input type="submit" value="Submit"/>
 	</form>

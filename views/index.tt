@@ -4,6 +4,7 @@
 			<li><a href="/">SplineAPI</a></li>
 			<li><a href="/register" class="active">Register</a></li>
 			<li><a href="/userinfo" class="active">User Info</a></li>
+			<li><a href="/usage" class="active">How to use</a></li>
 		</ul>
 	</div>
 </nav>
@@ -59,18 +60,24 @@
 				<table>
 					<thead>
 						<tr>
-							<th class="max">length</th>
+							<th class="max">Parameter</th>
+							<th class="check-container">Length</th>
 							<th class="check-container">Cost</th>
 						</tr>
 					</thead>
 					<tbody>
 						[% FOREACH parameter IN tools.$elem.text_cost.keys.sort %]
-						<tr>
-							<td>[% parameter %]</td>
-							<td>
-								[% tools.$elem.text_cost.$parameter %]
-							</td>
-						</tr>
+							[% FOREACH pair IN tools.$elem.text_cost.$parameter %]
+								<tr>
+									<td>[% parameter %]</td>
+									<td>
+										[% pair.0 %]
+									</td>
+									<td>
+										+ [% pair.1 %]
+									</td>
+								</tr>
+							[% END %]
 						[% END %]
 					</tbody>
 				</table>
@@ -90,20 +97,16 @@
 		<div class="content">
 			<a name="demo"></a>
 			<h1 class="title">DEMO</h1>
-			<p class="description">Simple Demo to test some of the PLN tools available.</p>
-			<form id="demoForm" method="post">
-				<p class="subtitle">Input:</p>
-				<input type="text" name="input_text" id="input_text" class="code"/>
-				<p class="subtitle">Parameter:</p>
+			<p class="description">Simple Demo to test the PLN services available.</p>
+			<form id="demoForm" method="post" enctype="multipart/form-data">
+				<p class="subtitle">Service:</p>
 				<select name="pln_token" id="pln_token">
+					<option value="0" selected>Choose a service</option>
 					[% FOREACH elem IN tools.keys.sort %]
-						[% IF tools.$elem.parameters.word OR tools.$elem.parameters.text %]
-							<option value="[% elem %]">[% elem %]</option>
-						[% END %]
+						<option value="[% elem %]">[% elem %]</option>
 					[% END %]
 				</select>
-				<p class="subtitle">API Token:</p>
-				<input type="text" name="api_token" id="api_token" class="code"/>
+				<div id="new_params"></div>
 				<p class="subtitle">Output:</p>
 				<p class="code" id="output_text"></p>
 				<input name="submit" type="submit" value="Submit">
@@ -115,8 +118,7 @@
 	<div class="container">
 		<a name="contacts"></a>
 		<div class="terms"> <a href="#">Developer Terms of Use</a></div>
-		<div class="contact-container"> <span class="contact">Numero blah blah</span> | <span class="contact"> email blah blah</span> | <span class="contact">outr blah blah</span></div> <div href="#" class="copywright">copywright something something</div>
-			
+		<div class="contact-container"> <span class="contact"> email: splineapi@gmail.com</span> | <span class="contact">other: ---</span></div> <div href="#" class="copywright">copyrights ---</div>	
 		</div>
 	</div>
 </footer>

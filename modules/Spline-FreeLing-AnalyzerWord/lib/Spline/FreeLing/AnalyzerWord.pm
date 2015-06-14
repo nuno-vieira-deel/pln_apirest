@@ -12,14 +12,17 @@ my %index_info = (
     api_token => {
       description => 'The token to be indentified',
       required => 1,
+      type => 'text',
     },
     word => {
       description => 'The word to be analyzed',
       required => 1,
+      type => 'text',
     },
     ner => {
       description => 'Named-entity recognition',
       required => 0,
+      type => 'number',
       default => 0,
     },
   },

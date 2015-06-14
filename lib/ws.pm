@@ -50,6 +50,16 @@ get '/info' => sub {
   return to_json (\@array);
 };
 
+get '/tokeninfo' => sub {
+  my %input_params = params;
+  return to_json ($indexmap{$input_params{token}});
+};
+
+get '/usage' => sub {
+  template 'usage' => {
+  };
+};
+
 get '/register' => sub {
   template 'sign_in' => {
   };
@@ -112,6 +122,7 @@ post '/*' => sub {
     $upload->copy_to('data/files');
     $_ = $upload->tempname;
     s/\/tmp\///;
+    print "ola\n";
     $input_params{$file} = 'data/files/'.$_;
   }
   my $val = $routemap{$path}{param_function}->(\%input_params);

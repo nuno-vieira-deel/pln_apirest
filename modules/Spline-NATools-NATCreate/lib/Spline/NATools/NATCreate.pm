@@ -12,10 +12,12 @@ my %index_info = (
 		api_token => {
 			description => 'The token to be identified',
 			required => 1,
+			type => 'text',
 		},
 		file => {
 			description => 'The file to be treated',
 			required => 1,
+			type => 'file',
 		},
 	},
 	description => 'Descricao.',

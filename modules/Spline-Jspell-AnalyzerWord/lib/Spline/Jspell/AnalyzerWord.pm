@@ -12,10 +12,12 @@ my %index_info = (
     api_token => {
       description => 'The token to be indentified',
       required => 1,
+      type => 'text',
     },
     word => {
       description => 'The word to be analyzed',
       required => 1,
+      type => 'text',
     },
   },
   subtitle => 'Subtitulo de jspell_word_analyzer',

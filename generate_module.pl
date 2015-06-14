@@ -116,6 +116,7 @@ my %handler=(
     								$v{required} = 1 if $v{required} eq 'true';
     								$v{required} = 0 if $v{required} eq 'false';
     								$hash_info{parameters}->[(scalar @{$hash_info{parameters}})-1]{required} = $v{required};
+    								$hash_info{parameters}->[(scalar @{$hash_info{parameters}})-1]{type} = $v{type};
     								my %param = ();
     								push @{$hash_info{parameters}}, \%param;
     							}, # attributes: required
@@ -179,14 +180,17 @@ sub create_hash_info{
 	    $r .= "\t\tapi_token => {\n";
 	      $r .= "\t\t\tdescription => 'The token to be identified',\n";
 	      $r .= "\t\t\trequired => 1,\n";
+	      $r .= "\t\t\ttype => 'text',\n";
 	    $r .= "\t\t},\n";
 	  for( my $i = 0 ; $i < scalar @{$parameters} ; $i++){
 	  	if (defined $parameters->[$i]{name}){
 	  		my $aux_name = $parameters->[$i]{name};
 	  		my $aux_required = $parameters->[$i]{required};
+	  		my $aux_type = $parameters->[$i]{type};
 		  	$r .= "\t\t$aux_name => {\n";
 		      $r .= "\t\t\tdescription => '$parameters->[$i]{description}',\n" if(defined $parameters->[$i]{description});
 		      $r .= "\t\t\trequired => $aux_required,\n";
+		      $r .= "\t\t\ttype => '$aux_type',\n";
 		      if(defined $parameters->[$i]{default}){
 		      	if (looks_like_number($parameters->[$i]{default})){ $r .= "\t\t\tdefault => $parameters->[$i]{default},\n";}
 		      	else {$r .= "\t\t\tdefault => '$parameters->[$i]{default}',\n";}
