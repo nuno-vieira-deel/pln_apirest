@@ -11,17 +11,19 @@ my %index_info = (
     api_token => {
       description => 'The token to be indentified',
       required => 1,
+      type => 'text',
     },
     text => {
       description => 'The text to be tokenized',
       required => 1,
+      type => 'textarea',
     },
   },
   subtitle => 'Subtitulo de tokenizer',
   description => 'Descricao de tokenizer',
   cost => 1,
   text_cost => {
-    text => [[100,1,],[1000,2,]],
+    text => [[100,1],[1000,2],[2000,3]],
   },
 );
 

@@ -4,13 +4,14 @@
 			<li><a href="/">SplineAPI</a></li>
 			<li><a href="/register" class="active">Register</a></li>
 			<li><a href="/userinfo" class="active">User Info</a></li>
+			<li><a href="/usage" class="active">How to use</a></li>
 		</ul>
 	</div>
 </nav>
 <main class="container" style="text-align:center">
 	<h2>Register Form</h2>
 	<form action="/sign_in" method="post">
-		<label for="email"></label>
+		<label for="email">Email: </label>
 		<input type="email" name="email" required/>
 		<br/>
 			<div class="g-recaptcha" data-sitekey="6LceWQITAAAAAAvIEiFeHtzYWRwxl-pJIXQt2wH5"></div>

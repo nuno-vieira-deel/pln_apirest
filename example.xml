@@ -4,10 +4,10 @@
 		<name>NewTest</name>
 		<route>new_test</route>
 		<parameters>
-			<parameter required="true" name="file">
+			<parameter required="true" name="file" type="file">
 				<description>The file to be treated</description>
 			</parameter>
-			<parameter required="false" name="ner">
+			<parameter required="false" name="ner" type="number">
 				<description>The NER.</description>
 				<default>1</default>
 			</parameter>

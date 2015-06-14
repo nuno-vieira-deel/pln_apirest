@@ -1,0 +1,36 @@
+<nav class="breadcrumbs">
+	<div class="container">
+		<ul>
+			<li><a href="/">SplineAPI</a></li>
+			<li><a href="/register" class="active">Register</a></li>
+			<li><a href="/userinfo" class="active">User Info</a></li>
+			<li><a href="/usage" class="active">How to use</a></li>
+		</ul>
+	</div>
+</nav>
+<main class="container">
+	<nav class="sidebar">
+		<ul>
+			<li class="active"><a href="#example">Example Of Use</a></li>
+			<li><a href="#coins">Coin Strategy</a></li>
+		</ul>
+	</nav>
+	<section class="content-wrapper">
+		<div class="content">
+			<a name="example"></a>
+			<h1 class="title">Example Of Use</h1>
+			<p class="description">After choosing the desaired service, a HTTP POST request may be made. To do that, it is advised by us to see all the information related to the service like the required parameters to successfully return something. To use any of our service it is needed a token that can be obtained with a simple authentication in the platform.</p>
+			<p class="description">How to do it with an easy curl command:</p>
+			<p class="code">curl -i -F "text=Any sentence you want." -F "api_token=your_token" http://spline.di-um.org/tokenizer</p>
+			<p class="description">You can send this type of request with text, numbers and files too.</p>
+			<p class="code">curl -i -F "file=@path/file" -F "api_token=your_token" http://spline.di-um.org/nat-create</p>
+		</div>
+		<br/><br/>
+		<div class="content">
+			<a name="coins"></a>
+			<h1 class="title">Coin Strategy</h1>
+			<p class="description">All users have a limited amount of coins to spend in our services. The spent value resets once a day and can be consulted <a href="/userinfo">here</a>.</p>
+			<p class="description">In the <a href="/">homepage</a>, it is possible to find the costs of all the services available. Every functionality has a usage cost that is fixed and optionally a cost based on the length of the content.</p>
+		</div>
+	</section>
+</main>

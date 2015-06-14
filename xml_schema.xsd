@@ -24,6 +24,8 @@
                                                   use="required"/>
                                                 <xs:attribute name="required" type="xs:boolean"
                                                   use="required"/>
+                                                <xs:attribute name="type" type="xs:string"
+                                                  use="required"/>
                                             </xs:complexType>
                                         </xs:element>
                                     </xs:sequence>
