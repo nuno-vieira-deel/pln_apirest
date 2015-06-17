@@ -24,7 +24,6 @@ my %index_info = (
 	description => 'This service provides you a way to tokenize your information.',
 	cost => 1,
 	text_cost => {
-		api_token => [[2000,3],],
 		text => [[100,1],[1000,2],],
 	},
 );
