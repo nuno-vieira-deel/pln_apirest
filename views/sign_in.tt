@@ -17,7 +17,7 @@
 		<label for="email">Email: </label>
 		<input type="email" name="email" required/>
 		<br/><br/>
-			<div class="g-recaptcha" style="margin:auto" data-sitekey="6LceWQITAAAAAAvIEiFeHtzYWRwxl-pJIXQt2wH5"></div>
+			<div class="g-recaptcha" data-sitekey="6LceWQITAAAAAAvIEiFeHtzYWRwxl-pJIXQt2wH5"></div>
 		<br/>
 		<input type="submit" value="Submit"/>
 	</form>

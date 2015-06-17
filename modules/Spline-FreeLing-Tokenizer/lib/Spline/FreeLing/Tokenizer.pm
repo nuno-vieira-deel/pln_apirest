@@ -5,26 +5,28 @@ use strict;
 use warnings;
 use JSON;
 
+use Lingua::FreeLing3;
+
 my %index_info = (
-  hash_token => 'tokenizer',
-  parameters => {
-    api_token => {
-      description => 'The token to be indentified',
-      required => 1,
-      type => 'text',
-    },
-    text => {
-      description => 'The text to be tokenized',
-      required => 1,
-      type => 'textarea',
-    },
-  },
-  subtitle => 'Subtitulo de tokenizer',
-  description => 'Descricao de tokenizer',
-  cost => 1,
-  text_cost => {
-    text => [[100,1],[1000,2],[2000,3]],
-  },
+	hash_token => 'tokenizer',
+	parameters => {
+		api_token => {
+			description => 'The token to be identified',
+			required => 1,
+			type => 'text',
+		},
+		text => {
+			description => 'The text to be tokenized.',
+			required => 1,
+			type => 'textarea',
+		},
+	},
+	description => 'This service provides you a way to tokenize your information.',
+	cost => 1,
+	text_cost => {
+		file => [[100,1],[1000,2],],
+		api_token => [[2000,3],],
+	},
 );
 
 sub get_token {
@@ -68,20 +70,33 @@ sub param_function {
 
 sub main_function {
   my ($input_params) = @_;
-  my $tokens = _fl3_tokenizer($input_params);
+  my $tokens = _freeling_tokenizer($input_params);
   return encode_json $tokens;
 }
 
-sub _fl3_tokenizer {
-  my ($input_params) = @_;
-  my $text = $input_params->{text};
-  return unless $text;
+sub _freeling_tokenizer{
+	my ($input_params) = @_;
+	my $text = $input_params->{text};
+	return unless $text;
 
-  my $pt_tok = Lingua::FreeLing3::Tokenizer->new("pt");
-  my $tokens = $pt_tok->tokenize($text, to_text => 1);
 
-  return $tokens;
+			my $pt_tok = Lingua::FreeLing3::Tokenizer->new("pt");
+  			my $tokens = $pt_tok->tokenize($text, to_text => 1);
+  			return $tokens;
+  		
 }
 
 1;
 __END__
+
+=head1 MODULE
+
+Spline::FreeLing::Tokenizer - a module that tokenize your text.
+
+=head1 SYNOPSIS
+
+Just load the Spline main package to your script or send a HTTP POST directly to the Spline platfor and use the tokenizer function/service provided.
+
+=head1 DESCRIPTION
+
+This module provides a way to tokenize the text sent by the user. It is required the text information and the Spline token to use this functionality.

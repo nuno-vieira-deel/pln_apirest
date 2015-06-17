@@ -1,38 +1,41 @@
 <service>
 	<meta batch="false">
-		<tool>Test</tool>
-		<name>NewTest</name>
-		<route>new_test</route>
+		<tool>FreeLing</tool>
+		<name>Tokenizer</name>
+		<route>tokenizer</route>
 		<parameters>
-			<parameter required="true" name="file" type="file">
-				<description>The file to be treated</description>
-			</parameter>
-			<parameter required="false" name="ner" type="number">
-				<description>The NER.</description>
-				<default>1</default>
+			<parameter required="true" name="text" type="textarea">
+				<description>The text to be tokenized.</description>
 			</parameter>
 		</parameters>
-		<definition>Descricao.</definition>
-		<cost>20</cost>
+		<definition>This service provides you a way to tokenize your information.</definition>
+		<cost>1</cost>
 		<text_costs>
-			<text_cost field="file" length="1000" cost="1"/>
-			<text_cost field="file" length="2000" cost="2"/>
-			<text_cost field="api_token" length="2000" cost="2"/>
+			<text_cost field="file" length="100" cost="1"/>
+			<text_cost field="file" length="1000" cost="2"/>
+			<text_cost field="api_token" length="2000" cost="3"/>
 		</text_costs>
 	</meta>
 	<implementation>
 		<packages>
-			<package>Lingua::NATools</package>
+			<package>Lingua::FreeLing3</package>
 		</packages>
-		<main lang="bash">echo "$ner\n"
-			echo "adeus\n"
-  	</main>
+		<main lang="perl">
+			my $pt_tok = Lingua::FreeLing3::Tokenizer->new("pt");
+  			my $tokens = $pt_tok->tokenize($text, to_text => 1);
+  			return $tokens;
+  		</main>
 	</implementation>
+	<tests>
+		<test>
+			<param name="text">I will be tokenized.</param>
+			<code>ok($result->[0] eq 'I', "Test the first word");</code>
+			<code>ok((scalar @{$result}) == 5, "Test the result length");</code>
+		</test>
+	</tests>
 	<documentation>
-		<header title="module">Spline::NATools::NATCreate - a module to create ...</header>
-		<header title="synopsis">NATCreate synopsis</header>
-		<header title="description">NATCreate description</header>
-		<header title="author">NATCreate Author</header>
-		<header title="see also">Other modules</header>
+		<header title="module">Spline::FreeLing::Tokenizer - a module that tokenize your text.</header>
+		<header title="synopsis">Just load the Spline main package to your script or send a HTTP POST directly to the Spline platfor and use the tokenizer function/service provided.</header>
+		<header title="description">This module provides a way to tokenize the text sent by the user. It is required the text information and the Spline token to use this functionality.</header>
 	</documentation>
 </service>
