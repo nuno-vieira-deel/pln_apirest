@@ -1,6 +1,6 @@
 Revision history for Perl extension Spline::FreeLing::Tokenizer.
 
-0.01  Wed Jun 17 07:01:08 2015
+0.01  Wed Jun 17 07:35:00 2015
 	- original version; created by h2xs 1.23 with options
 		-XAn Spline::FreeLing::Tokenizer
 
