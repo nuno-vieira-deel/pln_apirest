@@ -11,9 +11,8 @@
 		<definition>This service provides you a way to tokenize your information.</definition>
 		<cost>1</cost>
 		<text_costs>
-			<text_cost field="file" length="100" cost="1"/>
-			<text_cost field="file" length="1000" cost="2"/>
-			<text_cost field="api_token" length="2000" cost="3"/>
+			<text_cost field="text" length="100" cost="1"/>
+			<text_cost field="text" length="1000" cost="2"/>
 		</text_costs>
 	</meta>
 	<implementation>
