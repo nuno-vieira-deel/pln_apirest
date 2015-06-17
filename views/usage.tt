@@ -1,7 +1,9 @@
 <nav class="breadcrumbs">
-	<div class="container">
-		<ul>
+	<div class="container" style="overflow:auto">
+		<ul style="float:left">
 			<li><a href="/">SplineAPI</a></li>
+		</ul>
+		<ul style="float:right">
 			<li><a href="/register" class="active">Register</a></li>
 			<li><a href="/userinfo" class="active">User Info</a></li>
 			<li><a href="/usage" class="active">How to use</a></li>
