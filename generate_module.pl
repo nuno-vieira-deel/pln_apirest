@@ -37,6 +37,9 @@ my $test_number = 1;
 my $last_param = 0;
 my $method = 0;
 my $packages = "";
+my $all_code = "";
+my $lang = "perl";
+my @files = ();
 
 $hash_info{hash_token} = "";
 $hash_info{subtitle} = "";
@@ -75,12 +78,16 @@ my %handler=(
     'definition' => sub{ $hash_info{description} = $c; },
     'route' => sub{ $hash_info{hash_token} = $c; },
     'implementation' => sub{""},
-    'main' => sub{ 
+    'main' => sub{
+    								$all_code = $c;
     								print $fh create_hash_info(%hash_info); 
-    								print $fh create_default_functions();
-    								print $fh create_main_function_perl($c, $method) if($v{lang} eq 'perl');
-    								print $fh create_main_function_bash($c, $method) if($v{lang} eq 'bash');
-    						},
+										print $fh create_default_functions();
+										$lang = $v{lang} if $v{lang};
+										if($method==0){
+											print $fh create_main_function_perl($all_code, $method, @files) if($lang eq 'perl');
+											print $fh create_main_function_bash($all_code, $method, @files) if($lang eq 'bash');
+    								}
+    				},
     'meta' => sub{
     				if($v{batch}){
     					$v{batch} = 0 if $v{batch} eq 'false';
@@ -96,7 +103,7 @@ my %handler=(
 	     						system("cp modules/intermediate/Spline-Services/.gitignore modules/Spline-$tool-$service/");
 		     					open($fh, '>', "modules/Spline-$tool-$service/lib/Spline/$tool/$service.pm"); 
 		     					print $fh "package Spline::$tool::$service;\n\n";
-		     					print $fh "use 5.018002;\nuse strict;\nuse warnings;\nuse JSON;\n\n";
+		     					print $fh "use 5.018002;\nuse strict;\nuse warnings;\nuse JSON;\nuse utf8;\nuse Encode qw(decode_utf8);\n\n";
 		     				}
 		     				else{
 		     					system("rm -rf modules/Spline-$tool-$service") if($flag and $flag eq "-d");
@@ -112,14 +119,14 @@ my %handler=(
     'default' => sub{ $hash_info{parameters}->[(scalar @{$hash_info{parameters}})-1]{default} = $c; },
     'description' => sub{ $hash_info{parameters}->[(scalar @{$hash_info{parameters}})-1]{description} = $c; },
     'parameter' => sub{ 
-    								$hash_info{parameters}->[(scalar @{$hash_info{parameters}})-1]{name} = $v{name};
-    								$v{required} = 1 if $v{required} eq 'true';
-    								$v{required} = 0 if $v{required} eq 'false';
-    								$hash_info{parameters}->[(scalar @{$hash_info{parameters}})-1]{required} = $v{required};
-    								$hash_info{parameters}->[(scalar @{$hash_info{parameters}})-1]{type} = $v{type};
-    								my %param = ();
-    								push @{$hash_info{parameters}}, \%param;
-    							}, # attributes: required
+							$hash_info{parameters}->[(scalar @{$hash_info{parameters}})-1]{name} = $v{name};
+							$v{required} = 1 if $v{required} eq 'true';
+							$v{required} = 0 if $v{required} eq 'false';
+							$hash_info{parameters}->[(scalar @{$hash_info{parameters}})-1]{required} = $v{required};
+							$hash_info{parameters}->[(scalar @{$hash_info{parameters}})-1]{type} = $v{type};
+							my %param = ();
+							push @{$hash_info{parameters}}, \%param;
+						}, # attributes: required
     'parameters' => sub{""},
     'service' => sub{""},
     'subtitle' => sub{ $hash_info{subtitle} = $c; },
@@ -134,29 +141,37 @@ my %handler=(
 							$aux_test++;
 						},
     'param' => sub { $tests{test_param}{$v{name}} = trim($c); },
-    'tests' => sub {""},
+    'tests' => sub {""
+    	},
     'text_cost' => sub{ 
-     									my %pair = ();
-     									$pair{cost} = $v{cost};
-     									$pair{length} = $v{length};
-     									$pair{field} = $v{field};
-     									push @{$hash_info{text_cost}}, \%pair;
-     								}, # attributes: length, cost
+ 									my %pair = ();
+ 									$pair{cost} = $v{cost};
+ 									$pair{length} = $v{length};
+ 									$pair{field} = $v{field};
+ 									push @{$hash_info{text_cost}}, \%pair;
+ 								}, # attributes: length, cost
     'text_costs' => sub{""},
     'tool' => sub{ 
-		     				$tool = ucfirst($c);
-		     				my @intermediates = `ls modules/intermediate`;
-		     				if (!("Spline-$tool\n" ~~ @intermediates)){
-	     						system("cd modules/intermediate; h2xs -XAn Spline::$tool; chmod -R 777 Spline-$tool");
-	     						system("cp modules/intermediate/Spline-Services/.gitignore modules/intermediate/Spline-$tool/");
-		     				} 
-     					},
+     				$tool = ucfirst($c);
+     				my @intermediates = `ls modules/intermediate`;
+     				if (!("Spline-$tool\n" ~~ @intermediates)){
+   						system("cd modules/intermediate; h2xs -XAn Spline::$tool; chmod -R 777 Spline-$tool");
+   						system("cp modules/intermediate/Spline-Services/.gitignore modules/intermediate/Spline-$tool/");
+     				} 
+ 					},
     'documentation' => sub{""},
     'header' => sub{ 
-    								$documentation{$aux_doc}{title} = uc($v{title}); 
-    								$documentation{$aux_doc}{content} = $c;
-    								$aux_doc++; 
-    						},
+								$documentation{$aux_doc}{title} = uc($v{title}); 
+								$documentation{$aux_doc}{content} = $c;
+								$aux_doc++; 
+    				},
+    'output' => sub{
+    		if($method==1){
+					print $fh create_main_function_perl($all_code, $method, @files) if($lang eq 'perl');
+					print $fh create_main_function_bash($all_code, $method, @files) if($lang eq 'bash');
+				}
+    	},
+    'file' => sub{ push @files, $c; },
 );
 dt($filename, %handler);
 
@@ -238,7 +253,7 @@ sub create_default_functions{
 }
 
 sub create_main_function_perl{
-	my ($code, $method) = @_;
+	my ($code, $method, @r_files) = @_;
 	my $parameters = $hash_info{parameters};
 	my $result = "";
 
@@ -266,7 +281,12 @@ sub create_main_function_perl{
 		$result .= "\t\$status{answer} = \$ans_json;\n\n";
 
 		$result .= "\topen (my \$jfh, \">\", \$json) or die \"cannot open file: \$!\";\n";
-			$result .= "\t\tprint \$jfh \"{\\\"status\\\":\\\"processing\\\"}\";\n";
+			$result .= "\t\tprint \$jfh \"{\\\"status\\\":\\\"processing\\\", \\\"result\\\":[";
+			for (my $i = 0; $i < (scalar @r_files)-1; $i++){
+				$result .= "\\\"".$r_files[$i]."\\\",";
+			}
+			$result .= "\\\"".$r_files[(scalar @r_files)-1]."\\\"";
+			$result .= "]}\";\n";
 		$result .= "\tclose(\$jfh);\n\n";
 
 		$code =~ s/\\/\\\\/g;
@@ -274,8 +294,8 @@ sub create_main_function_perl{
 		$code =~ s/\@/\\\@/g;
 		$code =~ s/\%/\\\%/g;
 		$code =~ s/\"/\\\"/g;
-		$code =~ s/\\\$json/\$json/g; 
-		for( my $i = 0 ; $i < scalar @{$parameters} ; $i++){
+		#$code =~ s/\\\$json/\$json/g; 
+		for( my $i = 0; $i < scalar @{$parameters}; $i++){
 			if (defined $parameters->[$i]{name}){
 				my $aux_name = $parameters->[$i]{name};
 				$code =~ s/\\\$$aux_name/\$$aux_name/g;
@@ -286,6 +306,10 @@ sub create_main_function_perl{
 			$result .= "\tprint \$dfh \"$packages\";\n";
 			$result .= "\tprint \$dfh \"\\n\";\n";
 			$result .= "\tprint \$dfh \"$code\";\n";
+			$result .= "\tprint \$dfh \"\\n\";\n";
+			$result .= "\tprint \$dfh \"";
+			$result .= "system(\\\"perl -pi -e 's/\\\\\\\"status\\\\\\\":\\\\\\\"processing\\\\\\\"/\\\\\\\"status\\\\\\\":\\\\\\\"done\\\\\\\"/' \$json \\\");";
+			$result .= "\";\n";
 		$result .= "\tclose(\$dfh);\n\n";
 
 		$result .= "\treturn \\\%status;\n";
@@ -296,7 +320,7 @@ sub create_main_function_perl{
 }
 
 sub create_main_function_bash{
-	my ($code, $method) = @_;
+	my ($code, $method, @r_files) = @_;
 	my $parameters = $hash_info{parameters};
 	my $result = "";
 
@@ -314,11 +338,13 @@ sub create_main_function_bash{
   if($method == 0){
   	$code =~ s/\"/\\\"/g;
   	$code =~ s/\;\n/\;/g;
+  	$code =~ s/^\n//g;
   	$code =~ s/\n/\;/g;
-		$result .= "\tsystem(\"$code\");\n";
-		$result .= "\tmy \%status = ();\n";
-		$result .= "\t\$status{status} = 'done';\n";
-		$result .= "\treturn \\\%status;\n";
+  	$code =~ s/[ \t]+/ /g;
+  	$result .= "\tmy \%resulthash = ();\n";
+		$result .= "\t\$resulthash{result} = `$code`;\n";
+		$result .= "\tchomp \$resulthash{result};\n";
+		$result .= "\treturn \\\%resulthash;\n";
 	}
 	else{
 		$result .= "\tmy \$now = time();\n";
@@ -330,15 +356,20 @@ sub create_main_function_bash{
 		$result .= "\t\$status{answer} = \$ans_json;\n\n";
 
 		$result .= "\topen (my \$jfh, \">\", \$json) or die \"cannot open file: \$!\";\n";
-			$result .= "\t\tprint \$jfh \"{\\\"status\\\":\\\"processing\\\"}\";\n";
+			$result .= "\t\tprint \$jfh \"{\\\"status\\\":\\\"processing\\\", \\\"result\\\":[";
+			for (my $i = 0; $i < (scalar @r_files)-1; $i++){
+				$result .= "\\\"".$r_files[$i]."\\\",";
+			}
+			$result .= "\\\"".$r_files[(scalar @r_files)-1]."\\\"";
+			$result .= "]}\";\n";
 		$result .= "\tclose(\$jfh);\n\n";
 
 		$code =~ s/\\/\\\\/g;
 		$code =~ s/\$/\\\$/g;
 		$code =~ s/\@/\\\@/g;
 		$code =~ s/\%/\\\%/g;
-		$code =~ s/\"/\\\\\\\"/g;
-		$code =~ s/\\\$json/\$json/g; 
+		$code =~ s/\"/\\\\\\\"/g; ## AQUI
+		#$code =~ s/\\\$json/\$json/g; 
 		for( my $i = 0 ; $i < scalar @{$parameters} ; $i++){
 			if (defined $parameters->[$i]{name}){
 				my $aux_name = $parameters->[$i]{name};
@@ -348,6 +379,10 @@ sub create_main_function_bash{
 
 		$result .= "\topen (my \$dfh, \">\", \"data/queue/\".\$now) or die \"cannot open file: \$!\";\n";
 			$result .= "\tprint \$dfh \"system(\\\"$code\\\");\";\n";
+			$result .= "\tprint \$dfh \"\\n\";\n";
+			$result .= "\tprint \$dfh \"";
+			$result .= "system(\\\"perl -pi -e 's/\\\\\\\"status\\\\\\\":\\\\\\\"processing\\\\\\\"/\\\\\\\"status\\\\\\\":\\\\\\\"done\\\\\\\"/' \$json \\\");";
+			$result .= "\";\n";
 		$result .= "\tclose(\$dfh);\n\n";
 
 		$result .= "\treturn \\\%status;\n";
@@ -358,12 +393,12 @@ sub create_main_function_bash{
 }
 
 sub create_tests{
-	my ($tool, $service, $aux_test, $test_number, $hash_token, %tests) = @_;
+	my ($toolx, $servicex, $aux_testx, $test_numberx, $hash_tokenx, %testsx) = @_;
 
-	$aux_test++;
+	$aux_testx++;
 
 	my $tfh;
-	open($tfh, '>', "modules/Spline-$tool-$service/t/generated_test".$test_number."_to_".lc($tool)."_".lc($service).".t");
+	open($tfh, '>', "modules/Spline-$toolx-$servicex/t/generated_test".$test_numberx."_to_".lc($toolx)."_".lc($servicex).".t");
 
 	print $tfh "use strict;\n";
 	print $tfh "use warnings;\n";
@@ -371,8 +406,8 @@ sub create_tests{
 	print $tfh "use Data::Dumper;\n";
 	print $tfh "use JSON;\n\n";
 
-	print $tfh "use Test::More tests => $aux_test;\n";
-	print $tfh "BEGIN { use_ok('Spline::$tool::$service') };\n\n";
+	print $tfh "use Test::More tests => $aux_testx;\n";
+	print $tfh "BEGIN { use_ok('Spline::$toolx::$servicex') };\n\n";
 
 	print $tfh "my \$host = \$ENV{SPLINE_HOST} || 'localhost';\n";
 	print $tfh "my \$port = \$ENV{SPLINE_PORT} || 8080;\n\n";
@@ -380,15 +415,15 @@ sub create_tests{
 	print $tfh "my \%params = ();\n";
 	print $tfh "\$params{api_token} = 'MAIlGopQUt';\n";
 
-	for my $param (keys %{$tests{test_param}}){
-		print $tfh "\$params{$param} = '".$tests{test_param}{$param}."';\n";
+	for my $param (keys %{$testsx{test_param}}){
+		print $tfh "\$params{$param} = '".$testsx{test_param}{$param}."';\n";
 	}
 
-	print $tfh "\nmy \$got = HTTP::Tiny->new->post_form(\"http://\".\$host.\":\".\$port.\"/$hash_token\", \\\%params);\n";
+	print $tfh "\nmy \$got = HTTP::Tiny->new->post_form(\"http://\".\$host.\":\".\$port.\"/$hash_tokenx\", \\\%params);\n";
 	print $tfh "my \$result = decode_json(\$got->{content});\n\n";
 
-	for my $code (@{$tests{test_code}}){
-		print $tfh $code."\n\n";
+	for my $codex (@{$testsx{test_code}}){
+		print $tfh $codex."\n\n";
 	}
 
 	close($tfh);

@@ -9,7 +9,7 @@
                             <xs:element name="tool" type="xs:string"/>
                             <xs:element name="name" type="xs:string"/>
                             <xs:element name="route" type="xs:string"/>
-                            <xs:element name="parameters">
+                            <xs:element name="parameters" minOccurs="0">
                                 <xs:complexType>
                                     <xs:sequence maxOccurs="unbounded" minOccurs="1">
                                         <xs:element name="parameter">
@@ -56,10 +56,11 @@
                 <xs:element name="implementation">
                     <xs:complexType>
                         <xs:sequence>
-                            <xs:element name="packages">
+                            <xs:element name="packages" minOccurs="0">
                                 <xs:complexType>
-                                    <xs:sequence maxOccurs="unbounded">
-                                        <xs:element name="package" type="xs:string"/>
+                                    <xs:sequence maxOccurs="1" minOccurs="1">
+                                        <xs:element name="package" type="xs:string"
+                                            maxOccurs="unbounded" minOccurs="0"/>
                                     </xs:sequence>
                                 </xs:complexType>
                             </xs:element>
@@ -73,16 +74,24 @@
                                     </xs:simpleContent>
                                 </xs:complexType>
                             </xs:element>
+                            <xs:element minOccurs="0" name="output">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element maxOccurs="unbounded" minOccurs="0" name="file"
+                                            type="xs:string"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>
                 <xs:element minOccurs="0" name="tests">
                     <xs:complexType>
-                        <xs:sequence maxOccurs="unbounded">
-                            <xs:element name="test">
+                        <xs:sequence maxOccurs="1" minOccurs="1">
+                            <xs:element name="test" maxOccurs="unbounded" minOccurs="0">
                                 <xs:complexType>
                                     <xs:sequence>
-                                        <xs:element maxOccurs="unbounded" name="param">
+                                        <xs:element maxOccurs="unbounded" name="param" minOccurs="0">
                                             <xs:complexType>
                                                 <xs:complexContent>
                                                   <xs:extension base="xs:anyType"> </xs:extension>

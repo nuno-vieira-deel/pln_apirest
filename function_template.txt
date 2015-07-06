@@ -39,7 +39,8 @@ sub param_function {
 
 sub main_function {
   my ($input_params) = @_;
-  my $tokens = service_function($input_params);
-  return encode_json $tokens;
+  my $result = service_function($input_params);
+  my $json = encode_json $result;
+  return decode_utf8($json);
 }
 

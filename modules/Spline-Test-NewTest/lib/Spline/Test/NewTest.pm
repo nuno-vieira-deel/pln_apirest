@@ -4,8 +4,9 @@ use 5.018002;
 use strict;
 use warnings;
 use JSON;
+use utf8;
+use Encode qw(decode_utf8);
 
-use Lingua::NATools;
 
 my %index_info = (
 	hash_token => 'new_test',
@@ -15,23 +16,16 @@ my %index_info = (
 			required => 1,
 			type => 'text',
 		},
-		file => {
-			description => 'The file to be treated',
-			required => 1,
-			type => 'file',
-		},
-		ner => {
-			description => 'The NER.',
+		text => {
+			description => 'The text to be tokenized.',
 			required => 0,
-			type => 'number',
-			default => 1,
+			type => 'textarea',
 		},
 	},
-	description => 'Descricao.',
-	cost => 20,
+	description => 'This service provides you a way to tokenize your information.',
+	cost => 1,
 	text_cost => {
-		api_token => [[2000,2],],
-		file => [[1000,1],[2000,2],],
+		text => [[100,1],[1000,2],],
 	},
 );
 
@@ -76,42 +70,37 @@ sub param_function {
 
 sub main_function {
   my ($input_params) = @_;
-  my $tokens = _test_newtest($input_params);
-  return encode_json $tokens;
+  my $result = _test_newtest($input_params);
+  my $json = encode_json $result;
+  return decode_utf8($json);
 }
 
 sub _test_newtest{
 	my ($input_params) = @_;
-	my $file = $input_params->{file};
-	return unless $file;
-	my $ner = $input_params->{ner};
+	my $text = $input_params->{text};
 
-	system("echo \"$ner\n\";			echo \"adeus\n\";  	");
+	my $now = time();
+	my $ans_json = "data/json/".$now.".json";
+	my $json = "public/".$ans_json;
 	my %status = ();
-	$status{status} = 'done';
+	$status{status} = 'processing';
+	$status{answer} = $ans_json;
+
+	open (my $jfh, ">", $json) or die "cannot open file: $!";
+		print $jfh "{\"status\":\"processing\", \"result\":[\"public/data/results/ficheiro.txt\"]}";
+	close($jfh);
+
+	open (my $dfh, ">", "data/queue/".$now) or die "cannot open file: $!";
+	print $dfh "system(\"
+				echo \\\"$text\\\"
+  	\");";
+	print $dfh "\n";
+	print $dfh "system(\"perl -pi -e 's/\\\"status\\\":\\\"processing\\\"/\\\"status\\\":\\\"done\\\"/' $json \");";
+	close($dfh);
+
 	return \%status;
 
 }
 
 1;
 __END__
-
-=head1 MODULE
-
-Spline::NATools::NATCreate - a module to create ...
-
-=head1 SYNOPSIS
-
-NATCreate synopsis
-
-=head1 DESCRIPTION
-
-NATCreate description
-
-=head1 AUTHOR
-
-NATCreate Author
-
-=head1 SEE ALSO
-
-Other modules

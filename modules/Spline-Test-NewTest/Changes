@@ -1,6 +1,6 @@
 Revision history for Perl extension Spline::Test::NewTest.
 
-0.01  Thu Jun 11 08:42:40 2015
+0.01  Mon Jul  6 08:37:40 2015
 	- original version; created by h2xs 1.23 with options
 		-XAn Spline::Test::NewTest
 

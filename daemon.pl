@@ -34,5 +34,4 @@ while(1){
 		system("rm data/queue/".$file);
 		shift @queue;
 	}
-
 }

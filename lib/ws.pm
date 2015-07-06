@@ -2,6 +2,7 @@ package ws;
 package Spline;
 
 use Dancer2 ':syntax';
+use utf8;
 use strict;
 use warnings;
 use Data::Dumper;

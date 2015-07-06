@@ -4,6 +4,8 @@ use 5.018002;
 use strict;
 use warnings;
 use JSON;
+use utf8;
+use Encode qw(decode_utf8);
 
 use Lingua::FreeLing3;
 
@@ -69,8 +71,9 @@ sub param_function {
 
 sub main_function {
   my ($input_params) = @_;
-  my $tokens = _freeling_tokenizer($input_params);
-  return encode_json $tokens;
+  my $result = _freeling_tokenizer($input_params);
+  my $json = encode_json $result;
+  return decode_utf8($json);
 }
 
 sub _freeling_tokenizer{
@@ -79,9 +82,9 @@ sub _freeling_tokenizer{
 	return unless $text;
 
 
-			my $pt_tok = Lingua::FreeLing3::Tokenizer->new("pt");
-  			my $tokens = $pt_tok->tokenize($text, to_text => 1);
-  			return $tokens;
+	my $pt_tok = Lingua::FreeLing3::Tokenizer->new("pt");
+	my $tokens = $pt_tok->tokenize($text, to_text => 1);
+	return $tokens;
   		
 }
 
