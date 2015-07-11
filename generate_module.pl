@@ -40,6 +40,7 @@ my $packages = "";
 my $all_code = "";
 my $lang = "perl";
 my @files = ();
+my @dirs = ();
 
 $hash_info{hash_token} = "";
 $hash_info{subtitle} = "";
@@ -84,8 +85,8 @@ my %handler=(
 										print $fh create_default_functions();
 										$lang = $v{lang} if $v{lang};
 										if($method==0){
-											print $fh create_main_function_perl($all_code, $method, @files) if($lang eq 'perl');
-											print $fh create_main_function_bash($all_code, $method, @files) if($lang eq 'bash');
+											print $fh create_main_function_perl($all_code, $method) if($lang eq 'perl');
+											print $fh create_main_function_bash($all_code, $method) if($lang eq 'bash');
     								}
     				},
     'meta' => sub{
@@ -141,8 +142,7 @@ my %handler=(
 							$aux_test++;
 						},
     'param' => sub { $tests{test_param}{$v{name}} = trim($c); },
-    'tests' => sub {""
-    	},
+    'tests' => sub {""},
     'text_cost' => sub{ 
  									my %pair = ();
  									$pair{cost} = $v{cost};
@@ -167,11 +167,15 @@ my %handler=(
     				},
     'output' => sub{
     		if($method==1){
-					print $fh create_main_function_perl($all_code, $method, @files) if($lang eq 'perl');
-					print $fh create_main_function_bash($all_code, $method, @files) if($lang eq 'bash');
+					print $fh create_main_function_perl($all_code, $method) if($lang eq 'perl');
+					print $fh create_main_function_bash($all_code, $method) if($lang eq 'bash');
 				}
     	},
     'file' => sub{ push @files, $c; },
+    'dir' => sub{ 
+    			push @dirs, $c; 
+    			push @files, $c.".zip";
+    		},
 );
 dt($filename, %handler);
 
@@ -253,7 +257,7 @@ sub create_default_functions{
 }
 
 sub create_main_function_perl{
-	my ($code, $method, @r_files) = @_;
+	my ($code, $method) = @_;
 	my $parameters = $hash_info{parameters};
 	my $result = "";
 
@@ -272,8 +276,8 @@ sub create_main_function_perl{
 		$result .= $code;
 	}
 	else{
-		$result .= "\tmy \$now = time();\n";
-		$result .= "\tmy \$ans_json = \"data/json/\".\$now.\".json\";\n";
+		$result .= "\tmy \$ID = time();\n";
+		$result .= "\tmy \$ans_json = \"data/json/\".\$ID.\".json\";\n";
 		$result .= "\tmy \$json = \"public/\".\$ans_json;\n";
 
 		$result .= "\tmy \%status = ();\n";
@@ -282,18 +286,22 @@ sub create_main_function_perl{
 
 		$result .= "\topen (my \$jfh, \">\", \$json) or die \"cannot open file: \$!\";\n";
 			$result .= "\t\tprint \$jfh \"{\\\"status\\\":\\\"processing\\\", \\\"result\\\":[";
-			for (my $i = 0; $i < (scalar @r_files)-1; $i++){
-				$result .= "\\\"".$r_files[$i]."\\\",";
+			for (my $i = 0; $i < ((scalar @files)-1); $i++){
+				print "------------AQUI: ".$files[$i]."----------\n";
+				$result .= "\\\"".$files[$i]."\\\",";
 			}
-			$result .= "\\\"".$r_files[(scalar @r_files)-1]."\\\"";
+			$result .= "\\\"".$files[(scalar @files)-1]."\\\"";
 			$result .= "]}\";\n";
 		$result .= "\tclose(\$jfh);\n\n";
+
+		$result .= "\tsystem(\"mkdir public/data/results/\$ID\");\n";
 
 		$code =~ s/\\/\\\\/g;
 		$code =~ s/\$/\\\$/g;
 		$code =~ s/\@/\\\@/g;
 		$code =~ s/\%/\\\%/g;
 		$code =~ s/\"/\\\"/g;
+		$code =~ s/\\\$ID/\$ID/g;
 		#$code =~ s/\\\$json/\$json/g; 
 		for( my $i = 0; $i < scalar @{$parameters}; $i++){
 			if (defined $parameters->[$i]{name}){
@@ -302,12 +310,15 @@ sub create_main_function_perl{
 			}
 		}
 
-		$result .= "\topen (my \$dfh, \">\", \"data/queue/\".\$now) or die \"cannot open file: \$!\";\n";
+		$result .= "\topen (my \$dfh, \">\", \"data/queue/\".\$ID) or die \"cannot open file: \$!\";\n";
 			$result .= "\tprint \$dfh \"$packages\";\n";
 			$result .= "\tprint \$dfh \"\\n\";\n";
 			$result .= "\tprint \$dfh \"$code\";\n";
 			$result .= "\tprint \$dfh \"\\n\";\n";
 			$result .= "\tprint \$dfh \"";
+			for (my $i = 0; $i < (scalar @dirs); $i++){
+				$result .= "system(\\\"zip -r public/".$dirs[$i]." public/".$dirs[$i]."\\\");\n";
+			}
 			$result .= "system(\\\"perl -pi -e 's/\\\\\\\"status\\\\\\\":\\\\\\\"processing\\\\\\\"/\\\\\\\"status\\\\\\\":\\\\\\\"done\\\\\\\"/' \$json \\\");";
 			$result .= "\";\n";
 		$result .= "\tclose(\$dfh);\n\n";
@@ -320,7 +331,7 @@ sub create_main_function_perl{
 }
 
 sub create_main_function_bash{
-	my ($code, $method, @r_files) = @_;
+	my ($code, $method, $r_dirs, @r_files) = @_;
 	my $parameters = $hash_info{parameters};
 	my $result = "";
 
@@ -347,8 +358,8 @@ sub create_main_function_bash{
 		$result .= "\treturn \\\%resulthash;\n";
 	}
 	else{
-		$result .= "\tmy \$now = time();\n";
-		$result .= "\tmy \$ans_json = \"data/json/\".\$now.\".json\";\n";
+		$result .= "\tmy \$ID = time();\n";
+		$result .= "\tmy \$ans_json = \"data/json/\".\$ID.\".json\";\n";
 		$result .= "\tmy \$json = \"public/\".\$ans_json;\n";
 
 		$result .= "\tmy \%status = ();\n";
@@ -357,12 +368,14 @@ sub create_main_function_bash{
 
 		$result .= "\topen (my \$jfh, \">\", \$json) or die \"cannot open file: \$!\";\n";
 			$result .= "\t\tprint \$jfh \"{\\\"status\\\":\\\"processing\\\", \\\"result\\\":[";
-			for (my $i = 0; $i < (scalar @r_files)-1; $i++){
-				$result .= "\\\"".$r_files[$i]."\\\",";
+			for (my $i = 0; $i < (scalar @files); $i++){
+				$result .= "\\\"".$files[$i]."\\\",";
 			}
-			$result .= "\\\"".$r_files[(scalar @r_files)-1]."\\\"";
+			$result .= "\\\"data/results/\$ID/output.log\\\"";
 			$result .= "]}\";\n";
 		$result .= "\tclose(\$jfh);\n\n";
+
+		$result .= "system(\"mkdir public/data/results/\$ID\");\n";
 
 		$code =~ s/\\/\\\\/g;
 		$code =~ s/\$/\\\$/g;
@@ -377,10 +390,13 @@ sub create_main_function_bash{
 			}
 		}
 
-		$result .= "\topen (my \$dfh, \">\", \"data/queue/\".\$now) or die \"cannot open file: \$!\";\n";
+		$result .= "\topen (my \$dfh, \">\", \"data/queue/\".\$ID) or die \"cannot open file: \$!\";\n";
 			$result .= "\tprint \$dfh \"system(\\\"$code\\\");\";\n";
 			$result .= "\tprint \$dfh \"\\n\";\n";
 			$result .= "\tprint \$dfh \"";
+			for (my $i = 0; $i < (scalar @{$r_dirs}); $i++){
+				$result .= "system(\\\"zip -r public/".$r_dirs->[$i]." public/".$r_dirs->[$i]."\\\");\n";
+			}
 			$result .= "system(\\\"perl -pi -e 's/\\\\\\\"status\\\\\\\":\\\\\\\"processing\\\\\\\"/\\\\\\\"status\\\\\\\":\\\\\\\"done\\\\\\\"/' \$json \\\");";
 			$result .= "\";\n";
 		$result .= "\tclose(\$dfh);\n\n";

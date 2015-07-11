@@ -32,6 +32,7 @@ while(1){
 		close($fh);
 
 		system("rm data/queue/".$file);
+		system("cp data/logs/$file.log public/data/results/$file/output.log ");
 		shift @queue;
 	}
 }

@@ -79,6 +79,8 @@
                                     <xs:sequence>
                                         <xs:element maxOccurs="unbounded" minOccurs="0" name="file"
                                             type="xs:string"/>
+                                        <xs:element maxOccurs="unbounded" minOccurs="0" name="dir"
+                                            type="xs:string"/>
                                     </xs:sequence>
                                 </xs:complexType>
                             </xs:element>
