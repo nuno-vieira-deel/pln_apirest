@@ -1,5 +1,7 @@
 $(document).ready(function(){
 
+	$("#pln_token").val("0");
+
 	$("#demoForm").on('submit', function() {
 		var formData = new FormData($(this)[0]);
 		var pln_token = $("#pln_token").val();

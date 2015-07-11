@@ -4,8 +4,9 @@ use 5.018002;
 use strict;
 use warnings;
 use JSON;
+use utf8;
+use Encode qw(decode_utf8);
 
-use Lingua::NATools;
 
 my %index_info = (
 	hash_token => 'new_test',
@@ -16,23 +17,13 @@ my %index_info = (
 			type => 'text',
 		},
 		file => {
-			description => 'The file to be treated',
+			description => 'The file to be treated.',
 			required => 1,
 			type => 'file',
 		},
-		ner => {
-			description => 'The NER.',
-			required => 0,
-			type => 'number',
-			default => 1,
-		},
 	},
-	description => 'Descricao.',
-	cost => 20,
-	text_cost => {
-		api_token => [[2000,2],],
-		file => [[1000,1],[2000,2],],
-	},
+	description => 'This service provides you a way to tokenize your information.',
+	cost => 1,
 );
 
 sub get_token {
@@ -76,42 +67,45 @@ sub param_function {
 
 sub main_function {
   my ($input_params) = @_;
-  my $tokens = _test_newtest($input_params);
-  return encode_json $tokens;
+  my $result = _test_newtest($input_params);
+  my $json = encode_json $result;
+  return decode_utf8($json);
 }
 
 sub _test_newtest{
 	my ($input_params) = @_;
 	my $file = $input_params->{file};
 	return unless $file;
-	my $ner = $input_params->{ner};
 
-	system("echo \"$ner\n\";			echo \"adeus\n\";  	");
+	my $ID = time();
+	my $ans_json = "data/json/".$ID.".json";
+	my $json = "public/".$ans_json;
 	my %status = ();
-	$status{status} = 'done';
+	$status{status} = 'processing';
+	$status{answer} = $ans_json;
+
+	open (my $jfh, ">", $json) or die "cannot open file: $!";
+		print $jfh "{\"status\":\"processing\", \"result\":[\"data/results/$ID/target-source.dmp\",\"data/results/$ID/source-target.dmp\",\"data/results/$ID/folder.zip\"]}";
+	close($jfh);
+
+	system("mkdir public/data/results/$ID");
+	open (my $dfh, ">", "data/queue/".$ID) or die "cannot open file: $!";
+	print $dfh "";
+	print $dfh "\n";
+	print $dfh "
+				system(\"nat-create -tokenize -id=public/data/results/$ID -tmx $file\");
+				system(\"mkdir public/data/results/$ID/folder\");
+				system(\"cp public/data/results/$ID/target-source.dmp public/data/results/$ID/folder/target-source.dmp\");
+				system(\"cp public/data/results/$ID/source-target.dmp public/data/results/$ID/folder/source-target.dmp\");
+  	";
+	print $dfh "\n";
+	print $dfh "system(\"zip -r public/data/results/$ID/folder public/data/results/$ID/folder\");
+system(\"perl -pi -e 's/\\\"status\\\":\\\"processing\\\"/\\\"status\\\":\\\"done\\\"/' $json \");";
+	close($dfh);
+
 	return \%status;
 
 }
 
 1;
 __END__
-
-=head1 MODULE
-
-Spline::NATools::NATCreate - a module to create ...
-
-=head1 SYNOPSIS
-
-NATCreate synopsis
-
-=head1 DESCRIPTION
-
-NATCreate description
-
-=head1 AUTHOR
-
-NATCreate Author
-
-=head1 SEE ALSO
-
-Other modules

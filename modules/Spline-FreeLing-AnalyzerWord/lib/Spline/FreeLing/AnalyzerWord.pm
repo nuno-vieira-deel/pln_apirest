@@ -4,6 +4,8 @@ use 5.018002;
 use strict;
 use warnings;
 use JSON;
+use utf8;
+use Encode qw(decode_utf8);
 use FL3 'pt';
 
 my %index_info = (
@@ -76,7 +78,8 @@ sub param_function {
 sub main_function {
   my ($input_params) = @_;
   my $result = _fl3_analyzer_word($input_params);
-  return encode_json $result;
+  my $json = encode_json $result;
+  return decode_utf8($json);
 }
 
 sub _fl3_analyzer_word {

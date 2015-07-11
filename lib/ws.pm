@@ -2,6 +2,7 @@ package ws;
 package Spline;
 
 use Dancer2 ':syntax';
+use utf8;
 use strict;
 use warnings;
 use Data::Dumper;
@@ -122,7 +123,6 @@ post '/*' => sub {
     $upload->copy_to('data/files');
     $_ = $upload->tempname;
     s/\/tmp\///;
-    print "ola\n";
     $input_params{$file} = 'data/files/'.$_;
   }
   my $val = $routemap{$path}{param_function}->(\%input_params);
