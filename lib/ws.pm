@@ -116,20 +116,22 @@ post '/*' => sub {
   my ($path) = splat; 
   my @error = ();
   my $result = to_json(\@error);
-  my %input_params = params;
-  my $uploads = request->uploads();
-  for my $file (keys %{$uploads}){
-    my $upload = $uploads->{$file};
-    $upload->copy_to('data/files');
-    $_ = $upload->tempname;
-    s/\/tmp\///;
-    $input_params{$file} = 'data/files/'.$_;
-  }
-  my $val = $routemap{$path}{param_function}->(\%input_params);
-  if ($val==1){
-    my $cost = $routemap{$path}{cost_function}->(\%input_params);
-    if(do_request($input_params{api_token}, $cost, $path) == 1){
-      $result = $routemap{$path}{main_function}->(\%input_params);
+  if($routemap{$path}){
+    my %input_params = params;
+    my $uploads = request->uploads();
+    for my $file (keys %{$uploads}){
+      my $upload = $uploads->{$file};
+      $upload->copy_to('data/files');
+      $_ = $upload->tempname;
+      s/\/tmp\///;
+      $input_params{$file} = 'data/files/'.$_;
+    }
+    my $val = $routemap{$path}{param_function}->(\%input_params);
+    if ($val==1){
+      my $cost = $routemap{$path}{cost_function}->(\%input_params);
+      if(do_request($input_params{api_token}, $cost, $path) == 1){
+        $result = $routemap{$path}{main_function}->(\%input_params);
+      }
     }
   }
   return $result;

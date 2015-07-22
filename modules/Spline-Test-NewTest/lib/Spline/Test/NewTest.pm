@@ -24,6 +24,9 @@ my %index_info = (
 	},
 	description => 'This service provides you a way to tokenize your information.',
 	cost => 1,
+	text_cost => {
+		file => [[100,1],],
+	},
 );
 
 sub get_token {
@@ -39,7 +42,13 @@ sub cost_function{
   my $cost_result = 0;
 
   for my $param (keys %{$index_info{text_cost}}){
-    my $text_length = length($input_params->{$param});
+    my $text_length = "";
+    if($index_info{parameters}{$param}{type} eq 'file'){ 
+      $text_length = -s "$input_params->{$param}";
+    }
+    else{ 
+      $text_length = length($input_params->{$param});
+    }
     for my $pair (@{$index_info{text_cost}{$param}}){
       if($text_length >= int($pair->[0])){
         $cost_result += $pair->[1];
