@@ -287,7 +287,7 @@ sub create_main_function_perl{
 		$result .= "\topen (my \$jfh, \">\", \$json) or die \"cannot open file: \$!\";\n";
 			$result .= "\t\tprint \$jfh \"{\\\"status\\\":\\\"processing\\\", \\\"result\\\":[";
 			for (my $i = 0; $i < ((scalar @files)-1); $i++){
-				print "------------AQUI: ".$files[$i]."----------\n";
+				#print "------------AQUI: ".$files[$i]."----------\n";
 				$result .= "\\\"".$files[$i]."\\\",";
 			}
 			$result .= "\\\"".$files[(scalar @files)-1]."\\\"";

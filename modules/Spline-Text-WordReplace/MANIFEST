@@ -1,0 +1,6 @@
+Changes
+Makefile.PL
+MANIFEST
+README
+t/Spline-Text-WordReplace.t
+lib/Spline/Text/WordReplace.pm

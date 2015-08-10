@@ -1,0 +1,6 @@
+Changes
+Makefile.PL
+MANIFEST
+README
+t/Spline-Text.t
+lib/Spline/Text.pm

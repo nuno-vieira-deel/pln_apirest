@@ -1,4 +1,4 @@
-package Spline::NATools::NATCreate;
+package Spline::Text::WordReplace;
 
 use 5.018002;
 use strict;
@@ -9,7 +9,7 @@ use Encode qw(decode_utf8);
 
 
 my %index_info = (
-	hash_token => 'nat-create',
+	hash_token => 'word-replace',
 	parameters => {
 		api_token => {
 			description => 'The token to be identified',
@@ -21,11 +21,21 @@ my %index_info = (
 			required => 1,
 			type => 'file',
 		},
+		old_word => {
+			description => 'The word to be replaced.',
+			required => 1,
+			type => 'text',
+		},
+		new_word => {
+			description => 'The new word.',
+			required => 1,
+			type => 'text',
+		},
 	},
-	description => 'Nat-create description.',
-	cost => 1,
+	description => 'Substitute description.',
+	cost => 2,
 	text_cost => {
-		file => [[100,1],],
+		file => [[1000,1],],
 	},
 );
 
@@ -76,15 +86,19 @@ sub param_function {
 
 sub main_function {
   my ($input_params) = @_;
-  my $result = _natools_natcreate($input_params);
+  my $result = _text_wordreplace($input_params);
   my $json = encode_json $result;
   return decode_utf8($json);
 }
 
-sub _natools_natcreate{
+sub _text_wordreplace{
 	my ($input_params) = @_;
 	my $file = $input_params->{file};
 	return unless $file;
+	my $old_word = $input_params->{old_word};
+	return unless $old_word;
+	my $new_word = $input_params->{new_word};
+	return unless $new_word;
 
 	my $ID = time();
 	my $ans_json = "data/json/".$ID.".json";
@@ -94,7 +108,7 @@ sub _natools_natcreate{
 	$status{answer} = $ans_json;
 
 	open (my $jfh, ">", $json) or die "cannot open file: $!";
-		print $jfh "{\"status\":\"processing\", \"result\":[\"data/results/$ID/target-source.dmp\",\"data/results/$ID/source-target.dmp\"]}";
+		print $jfh "{\"status\":\"processing\", \"result\":[\"data/results/$ID/result.txt\"]}";
 	close($jfh);
 
 	system("mkdir public/data/results/$ID");
@@ -102,7 +116,8 @@ sub _natools_natcreate{
 	print $dfh "";
 	print $dfh "\n";
 	print $dfh "
-				system(\"nat-create -tokenize -id=public/data/results/$ID -tmx $file\");
+				system(\"perl -pi -e 's/$old_word/$new_word/g' $file\");
+				system(\"cp $file public/data/results/$ID/result.txt\");
   	";
 	print $dfh "\n";
 	print $dfh "system(\"perl -pi -e 's/\\\"status\\\":\\\"processing\\\"/\\\"status\\\":\\\"done\\\"/' $json \");";
