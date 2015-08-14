@@ -1,0 +1,33 @@
+<service>
+	<meta batch="true">
+		<tool>Text</tool>
+		<name>WordReplace</name>
+		<route>word-replace</route>
+		<parameters>
+			<parameter required="true" name="file" type="file">
+				<description>The file to be treated.</description>
+			</parameter>
+			<parameter required="true" name="old_word" type="text">
+				<description>The word to be replaced.</description>
+			</parameter>
+			<parameter required="true" name="new_word" type="text">
+				<description>The new word.</description>
+			</parameter>
+		</parameters>
+		<definition>Substitute description.</definition>
+		<cost>2</cost>
+		<text_costs>
+			<text_cost field="file" length="1000" cost="1"/>
+		</text_costs>
+	</meta>
+	<implementation>
+		<packages></packages>
+		<main lang="perl">
+				system("perl -pi -e 's/$old_word/$new_word/g' $file");
+				system("cp $file public/data/results/$ID/result.txt");
+  	</main>
+  	<output>
+  		<file>data/results/$ID/result.txt</file>
+  	</output>
+	</implementation>
+</service>

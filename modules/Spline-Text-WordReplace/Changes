@@ -1,0 +1,6 @@
+Revision history for Perl extension Spline::Text::WordReplace.
+
+0.01  Mon Aug 10 11:43:53 2015
+	- original version; created by h2xs 1.23 with options
+		-XAn Spline::Text::WordReplace
+
