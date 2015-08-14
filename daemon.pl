@@ -8,10 +8,13 @@ use JSON;
 use Module::Load;
 
 my @queue = ();
+my $last = 1;
 
 while(1){
 
 	if(scalar @queue == 0){
+		sleep(60) if($last==0);
+		$last = 0;
 		my @news = `ls data/queue`;
 		@news = sort @news;
 		push(@queue, @news);
@@ -20,6 +23,7 @@ while(1){
 	if(scalar @queue > 0){
 		my $file = $queue[0];
 		chomp($file);
+		$last = 1;
 
 		local $/=undef;
 		open(my $fh, "<", "data/queue/".$file);
