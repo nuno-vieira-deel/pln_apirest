@@ -273,6 +273,8 @@ sub create_main_function_perl{
   }
   $result .= "\n";
   if($method == 0){
+  	$result .= "\tmy \$ID = time();\n";
+  	$result .= "\tsystem(\"mkdir public/data/results/\$ID\");\n";
 		$result .= $code;
 	}
 	else{

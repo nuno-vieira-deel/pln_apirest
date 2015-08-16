@@ -1,0 +1,27 @@
+<service>
+	<meta batch="true">
+		<tool>NATools</tool>
+		<name>NATCreate</name>
+		<route>nat-create</route>
+		<parameters>
+			<parameter required="true" name="file" type="file">
+				<description>The file to be treated.</description>
+			</parameter>
+		</parameters>
+		<definition>Nat-create description.</definition>
+		<cost>1</cost>
+		<text_costs>
+			<text_cost field="file" length="100" cost="1"/>
+		</text_costs>
+	</meta>
+	<implementation>
+		<packages></packages>
+		<main lang="perl">
+				system("nat-create -tokenize -id=public/data/results/$ID -tmx $file");
+  	</main>
+  	<output>
+  		<file>data/results/$ID/target-source.dmp</file>
+  		<file>data/results/$ID/source-target.dmp</file>
+  	</output>
+	</implementation>
+</service>

@@ -1,0 +1,6 @@
+Changes
+Makefile.PL
+MANIFEST
+README
+t/Spline-Text-FileReplace.t
+lib/Spline/Text/FileReplace.pm
