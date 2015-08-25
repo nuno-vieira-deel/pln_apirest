@@ -1,4 +1,4 @@
-package Spline::Text::WordReplace;
+package Spline::Text::TextReplace;
 
 use 5.018002;
 use strict;
@@ -9,34 +9,31 @@ use Encode qw(decode_utf8);
 
 
 my %index_info = (
-	hash_token => 'word-replace',
+	hash_token => 'text-replace',
 	parameters => {
 		api_token => {
 			description => 'The token to be identified',
 			required => 1,
 			type => 'text',
 		},
-		file => {
-			description => 'The file to be treated.',
+		text => {
+			description => 'The text to be edited.',
 			required => 1,
-			type => 'file',
+			type => 'textarea',
 		},
-		old_word => {
-			description => 'The word to be replaced.',
+		old_expr => {
+			description => 'The expression to be replaced.',
 			required => 1,
 			type => 'text',
 		},
-		new_word => {
-			description => 'The new word.',
+		new_expr => {
+			description => 'The new content.',
 			required => 1,
 			type => 'text',
 		},
 	},
 	description => 'Substitute description.',
 	cost => 2,
-	text_cost => {
-		file => [[1000,1],],
-	},
 );
 
 sub get_token {
@@ -86,45 +83,30 @@ sub param_function {
 
 sub main_function {
   my ($input_params) = @_;
-  my $result = _text_wordreplace($input_params);
+  my $result = _text_textreplace($input_params);
   my $json = encode_json $result;
   return decode_utf8($json);
 }
 
-sub _text_wordreplace{
+sub _text_textreplace{
 	my ($input_params) = @_;
-	my $file = $input_params->{file};
-	return unless $file;
-	my $old_word = $input_params->{old_word};
-	return unless $old_word;
-	my $new_word = $input_params->{new_word};
-	return unless $new_word;
+	my $text = $input_params->{text};
+	return unless $text;
+	my $old_expr = $input_params->{old_expr};
+	return unless $old_expr;
+	my $new_expr = $input_params->{new_expr};
+	return unless $new_expr;
 
 	my $ID = time();
-	my $ans_json = "data/json/".$ID.".json";
-	my $json = "public/".$ans_json;
-	my %status = ();
-	$status{status} = 'processing';
-	$status{answer} = $ans_json;
-
-	open (my $jfh, ">", $json) or die "cannot open file: $!";
-		print $jfh "{\"status\":\"processing\", \"result\":[\"data/results/$ID/result.txt\"]}";
-	close($jfh);
-
 	system("mkdir public/data/results/$ID");
-	open (my $dfh, ">", "data/queue/".$ID) or die "cannot open file: $!";
-	print $dfh "";
-	print $dfh "\n";
-	print $dfh "
-				system(\"perl -pi -e 's/$old_word/$new_word/g' $file\");
-				system(\"cp $file public/data/results/$ID/result.txt\");
-  	";
-	print $dfh "\n";
-	print $dfh "system(\"perl -pi -e 's/\\\"status\\\":\\\"processing\\\"/\\\"status\\\":\\\"done\\\"/' $json \");";
-	close($dfh);
 
-	return \%status;
-
+				my %res = ();
+				$text =~ s/'/'\\''/g;
+        $old_expr =~ s/'/'\\''/g;
+        $new_expr =~ s/'/'\\''/g;
+				$res{result} = `echo \"$text\" | perl -p -e 's/$old_expr/$new_expr/g'`;
+				return \%res;
+  	
 }
 
 1;

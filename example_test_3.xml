@@ -1,11 +1,11 @@
 <service>
 	<meta batch="false">
 		<tool>Text</tool>
-		<name>FileReplace</name>
-		<route>file-replace</route>
+		<name>TextReplace</name>
+		<route>text-replace</route>
 		<parameters>
-			<parameter required="true" name="file" type="file">
-				<description>The file to be edited.</description>
+			<parameter required="true" name="text" type="textarea">
+				<description>The text to be edited.</description>
 			</parameter>
 			<parameter required="true" name="old_expr" type="text">
 				<description>The expression to be replaced.</description>
@@ -20,10 +20,11 @@
 	<implementation>
 		<packages></packages>
 		<main lang="perl">
-				system("perl -pi -e 's/$old_expr/$new_expr/g' $file");
-				system("cp $file public/data/results/$ID/result.txt");
 				my %res = ();
-				$res{result} = "data/results/$ID/result.txt";
+				$text =~ s/'/'\\''/g;
+        $old_expr =~ s/'/'\\''/g;
+        $new_expr =~ s/'/'\\''/g;
+				$res{result} = `echo \"$text\" | perl -p -e 's/$old_expr/$new_expr/g'`;
 				return \%res;
   	</main>
 	</implementation>
