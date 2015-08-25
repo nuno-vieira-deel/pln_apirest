@@ -101,6 +101,9 @@ sub _text_textreplace{
 	system("mkdir public/data/results/$ID");
 
 				my %res = ();
+				$text =~ s/'/'\\''/g;
+        $old_expr =~ s/'/'\\''/g;
+        $new_expr =~ s/'/'\\''/g;
 				$res{result} = `echo \"$text\" | perl -p -e 's/$old_expr/$new_expr/g'`;
 				return \%res;
   	
