@@ -98,7 +98,6 @@ sub _text_textreplace{
 	return unless $new_expr;
 
 	my $ID = time();
-	system("mkdir public/data/results/$ID");
 
 				my %res = ();
 				$text =~ s/'/'\\''/g;
