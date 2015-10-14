@@ -9,8 +9,9 @@ The objective of the platform is to centralize all the NLP services in a single 
 
 1. Get Perl
 2. Configure CPAN
-3. sudo apt-get install libxml2-dev
-4. sudo cpan Dancer2 Class::Unload Class::Factory::Util Dancer2::Plugin::Emailesque Dancer2::Plugin::Database DBD::SQLite Encode XML::LibXML XML::DT experimental Switch String::Util 
+3. sudo apt-get install libxml2-dev sqlite3
+4. sudo cpan Dancer2 Class::Unload Class::Factory::Util Dancer2::Plugin::Emailesque Dancer2::Plugin::Database DBD::SQLite Encode XML::LibXML XML::DT experimental Switch String::Util
+5. Create a new SQLite database and change the DB connection. It is possible to use a default sqlite already created to test the application
 
 
 ## Start service
@@ -37,11 +38,11 @@ Admins have the responsibility to add or edit the services provided by the platf
 
 To add a new service on the platform the admin have to:
 
-1. Create an XML file describing the desired service. The XML file has to be created based on the XML Schema ( $HOME/xml_schema.xsd ) validator. The repo has some example on the $HOME folder. [optional]
+1. Create an XML file describing the desired service. The XML file has to be created based on the XML Schema ( $HOME/xml_schema.xsd ) validator. The repo has some example on the $HOME folder [optional];
 2. Create a Perl Module:
-    1. If you created the XML file, it is as easy as running the module generated ( perl $HOME/generate_module.pl file.xml ) and the module will be generated automatically.
-    2. Create an empty Perl Module on $HOME/modules/intermediate with Spline::ToolName as the module name and create other Perl module with Spline::ToolName::ServiceName and fill it with all the required elements needed. The platform already includes some tools as an example (perl $HOME/generate_module.pl file.xml -d).
-3. Restart Dancer.
+    1. If you created the XML file, it is as easy as running the module generated ( perl $HOME/generate_module.pl file.xml ) and the module will be generated automatically;
+    2. Create an empty Perl Module on $HOME/modules/intermediate with Spline::ToolName as the module name and create other Perl module with Spline::ToolName::ServiceName and fill it with all the required elements needed. The platform already includes some tools as an example (perl $HOME/generate_module.pl file.xml -d);
+3. Restart Dancer;
 
 Edit a service is possible by changing the Perl Module directly or using the XML generator to erase the module and generate a new one.
 
