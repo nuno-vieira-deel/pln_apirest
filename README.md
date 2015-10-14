@@ -7,11 +7,11 @@ The objective of the platform is to centralize all the NLP services in a single 
 
 ## Installation in UNIX environment
 
-1. Get Perl
-2. Configure CPAN
+1. Get Perl.
+2. Configure CPAN.
 3. sudo apt-get install libxml2-dev sqlite3
 4. sudo cpan Dancer2 Class::Unload Class::Factory::Util Dancer2::Plugin::Emailesque Dancer2::Plugin::Database DBD::SQLite Encode XML::LibXML XML::DT experimental Switch String::Util
-5. Create a new SQLite database and change the DB connection. It is possible to use a default sqlite already created to test the application
+5. Create a new SQLite database and change the DB connection on $HOME/config.yml. It is possible to use a default SQLite database already created to test the application.
 
 
 ## Start service
