@@ -31,7 +31,7 @@ The objective of the platform is to centralize all the NLP services in a single 
 
 ## Usage
 
-### Usage for admins
+ Usage for admins
 
 Admins have the responsibility to add or edit the services provided by the platform and to install the tools on the server.
 
