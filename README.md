@@ -1,4 +1,4 @@
-# API REST for Natural Language Processing services
+# SplineAPI, API REST for Natural Language Processing services
 
 SplineAPI is a platform that can provide natural language processing services based on a simple REST API using NLP tools already installed on the server. The only restriction it has, is that these tools must be acessible via an interface for Perl programming language or via command line (at least for now).
 
@@ -63,6 +63,6 @@ The platform was designed and developed as part of a dissertation that explores 
 
 ## Credits
 
-Nuno Vieira
-Alberto Simões
-Nuno Carvalho
+- Nuno Vieira
+- Alberto Simões
+- Nuno Carvalho
