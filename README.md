@@ -31,11 +31,12 @@ The objective of the platform is to centralize all the NLP services in a single 
 
 ## Usage
 
- Usage for admins
+### Usage for admins
 
 Admins have the responsibility to add or edit the services provided by the platform and to install the tools on the server.
 
 To add a new service on the platform the admin have to:
+
 1. Create an XML file describing the desired service. The XML file has to be created based on the XML Schema ( $HOME/xml_schema.xsd ) validator. The repo has some example on the $HOME folder. [optional]
 2. Create a Perl Module:
     1. If you created the XML file, it is as easy as running the module generated ( perl $HOME/generate_module.pl file.xml ) and the module will be generated automatically.
