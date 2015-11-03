@@ -10,7 +10,7 @@
 		</ul>
 	</div>
 </nav>
-<main class="container">
+<main class="container" style="margin-top: 10%;">
 	<section class="content-wrapper">
 	<h2>Register Form</h2>
 	<form action="/sign_in" method="post">

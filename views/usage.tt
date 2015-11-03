@@ -36,3 +36,11 @@
 		</div>
 	</section>
 </main>
+<footer>
+	<div class="container">
+		<a name="contacts"></a>
+		<div class="terms"> <a href="#">Developer Terms of Use</a></div>
+		<div class="contact-container"> <span class="contact"> email: splineapi@gmail.com</span></div> <div href="#" class="copywright">copyrights SplineAPI</div>	
+		</div>
+	</div>
+</footer>
