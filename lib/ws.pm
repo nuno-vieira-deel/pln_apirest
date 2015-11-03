@@ -19,6 +19,15 @@ our $VERSION = '0.1';
 my %routemap = ();
 my %indexmap = ();
 
+my @errors = (
+    "OK",
+    "Service does not exist",
+    "Api Token missing",
+    "Mandatory arguments missing",
+    "Unsupported operation",
+    "Unknown error",
+  );
+
 my @classes = Spline->subclasses;
 
 for my $c (@classes) {
@@ -40,7 +49,7 @@ for my $c (@classes) {
 
 ####### URLs Dancer
 
-get '/' => sub {
+any ['get', 'post', 'put', 'patch', 'delete'] => '/' => sub {
   template 'index' => {
     tools => \%indexmap
   };
@@ -108,14 +117,11 @@ post '/userinfo' => sub {
   }
 
   return to_json(\%user_hash);
-
 };
 
-#any ['get', 'post'] => '/*' => sub {
 post '/*' => sub {
   my ($path) = splat; 
-  my @error = ();
-  my $result = to_json(\@error);
+  my $result = send_error_json(5);
   if($routemap{$path}){
     my %input_params = params;
     my $uploads = request->uploads();
@@ -126,6 +132,7 @@ post '/*' => sub {
       s/\/tmp\///;
       $input_params{$file} = 'data/files/'.$_;
     }
+    return send_error_json(2) if(!($input_params{"api_token"}));
     my $val = $routemap{$path}{param_function}->(\%input_params);
     if ($val==1){
       my $cost = $routemap{$path}{cost_function}->(\%input_params);
@@ -133,9 +140,15 @@ post '/*' => sub {
         $result = $routemap{$path}{main_function}->(\%input_params);
       }
     }
+    else{ return send_error_json(3); }
   }
+  else{ return send_error_json(1); }
   return $result;
 };
+
+any ['get', 'put', 'patch', 'delete'] => '/*' => sub {
+  send_error_json(4);
+}; 
 
 true;
 
@@ -219,4 +232,12 @@ sub get_user_history{
 
   my @rows = database->quick_select('api_history', { api_token => $encryptoken }, {columns => [qw(request cost date)]});
   return \@rows;
+}
+
+sub send_error_json{
+  my ($error) = @_;
+  my %hash = ();
+  $hash{code} = $error;
+  $hash{description} = $errors[$error];
+  return to_json (\%hash);
 }
