@@ -33,7 +33,7 @@ plugins:
     # for gmail...
     ssl: 1
     driver: smtp
-    host: smtp.googlemail.com
+    host: smtp.gmail.com
     port: 465
     user: splineapi@gmail.com
     pass: splinepassword
