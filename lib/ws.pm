@@ -60,11 +60,6 @@ get '/info' => sub {
   return to_json (\@array);
 };
 
-get '/tokeninfo' => sub {
-  my %input_params = params;
-  return to_json ($indexmap{$input_params{token}});
-};
-
 get '/usage' => sub {
   template 'usage' => {
   };
@@ -146,7 +141,12 @@ post '/*' => sub {
   return $result;
 };
 
-any ['get', 'put', 'patch', 'delete'] => '/*' => sub {
+get '/*' => sub {
+  my ($path) = splat; 
+  return to_json($indexmap{$path});
+};
+
+any ['put', 'patch', 'delete'] => '/*' => sub {
   send_error_json(4);
 }; 
 
